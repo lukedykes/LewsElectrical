@@ -1,0 +1,37 @@
+{
+  "name": "lews-electrical-demo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Concept website for Lews Electrical Ltd, designed and built by Own Time Studios.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "prepare": "panda codegen",
+    "dev": "vite",
+    "build": "panda codegen && tsc -p tsconfig.json && vite build",
+    "build:single": "panda codegen && vite build --mode single && node scripts/inline-build.mjs",
+    "start": "node server.mjs",
+    "preview": "npm run build && node server.mjs",
+    "typecheck": "panda codegen && tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "framer-motion": "^14.1.0",
+    "lenis": "^1.3.26",
+    "lucide-react": "^1.55.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@pandacss/dev": "^2.2.0",
+    "@pandacss/preset-base": "^2.2.0",
+    "@pandacss/preset-panda": "^2.2.0",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4"
+  }
+}
