@@ -1,40 +1,49 @@
 # Lews Electrical Ltd · Concept website
 
-A concept landing page for [Lews Electrical Ltd](https://www.lewselectrical.co.uk), electrical contractors for homes,
+A concept website for [Lews Electrical Ltd](https://www.lewselectrical.co.uk), electrical contractors for homes,
 businesses and the rail industry across Essex and London. Designed and built by
 [Own Time Studios](https://www.owntimestudios.com) as a "see it before you spend a penny" demo.
 
 **Demo link (once GitHub Pages is switched on):** https://lukedykes.github.io/LewsElectrical/
 
-The page carries a slim "Concept demo" bar and a `noindex` tag so it isn't mistaken for the live site or picked up by
-search engines before sign-off.
+A slim strip at the top says it is a concept by Own Time Studios, and a `noindex` tag keeps it out of search results
+until the client signs off.
 
-## What's in it
+## Design approach
 
-- **Light-switch hero.** The house photo starts in darkness and the lights flicker on (a night-graded copy of the photo
-  sits under the lit original). Visitors can flick the switch themselves; spec callouts appear with the lights.
-- **Wire wordmark.** "LEWS" drawn as a bundle of brown, blue and green-and-yellow cables with stripped copper ends,
-  after the client's logo. It draws itself in the footer.
-- **Sectors.** Domestic, commercial and rail as expanding photo panels.
-- **Services index.** Numbered rows with a photo that follows the cursor; clicking a row starts a quote for that
-  service.
-- **60-second rewire check.** Tick the warning signs and a voltmeter-style dial gives a verdict and the right call to
-  action.
-- **Before / after.** A draggable comparison of a salon with tired versus designed lighting (keyboard accessible).
-- **How it works.** Three cables sag between four steps and "conduct" as you scroll.
-- **Refer & earn.** The £50 / £150 referral scheme from the client's flyer as raffle tickets.
-- **Coverage map.** A rail-map style schematic of Essex and London plus a postcode checker.
-- **FAQ** and a **three-step quote form** with validation and a light-bulb success state.
-- Smooth scrolling, a scroll "current" bar, a sticky call/quote bar on phones, and full `prefers-reduced-motion`
-  support.
+The site is built from the client's own printed flyers rather than a generic template, so it looks like their business:
+
+- **Their colours and type.** Deep navy, signal red and white, with heavy italic condensed capitals for headlines
+  (Barlow Condensed) and the slanted red banner behind key words, as on the flyers. Body text is Barlow.
+- **Their words.** Headlines, checklists and offers come from the flyers: "Expert electrical solutions", "Do you need
+  your home rewired?", "Got a shop or salon that needs modernising?", "Refer a friend and be rewarded!", the red tick
+  lists and the round "A safer, brighter home starts here" badge.
+- **Local photography.** Southend Pier, Westcliff, Rayleigh, Southend High Street, c2c and Greater Anglia trains, all
+  from Wikimedia Commons with credits in the footer.
+- **Plain and practical.** No animation tricks. Phone number on every screen, a sticky call bar on phones, a simple
+  contact form and fast pages (about 1.2 MB of images in total).
+
+## Sections
+
+1. Header with accreditations, phone, email and a sticky menu
+2. Hero: "Expert electrical solutions" for homes, businesses and the rail industry
+3. Domestic, commercial and rail panels
+4. Services (the seven services from the flyer)
+5. Home rewires, with warning signs and fuse board photos
+6. Shops, salons and workplaces
+7. Rail infrastructure
+8. How it works and why choose Lews
+9. Refer a friend (£50 / £150)
+10. Areas covered
+11. FAQs
+12. Contact form and details
 
 ## Stack
 
 - React 19 + TypeScript 7
 - [Panda CSS](https://panda-css.com) 2 for styling (design tokens in `panda.config.ts`)
 - Vite 8 (Rolldown) on Node.js
-- framer-motion for animation, Lenis for smooth scrolling, lucide-react icons
-- `server.mjs`: a zero-dependency Node server that serves the build and accepts quote requests
+- `server.mjs`: a zero-dependency Node server that serves the build and accepts enquiries
 
 ## Getting the GitHub link
 
@@ -48,8 +57,8 @@ search engines before sign-off.
 
 ## Single-file demo
 
-`demo/lews-electrical-demo.html` is the whole site in one self-contained HTML file (about 1.8 MB, images and fonts
-included). Open it straight from disk, send it as an attachment, or host it anywhere static. Rebuild it with
+`demo/lews-electrical-demo.html` is the whole site in one self-contained HTML file, with images and fonts included.
+Open it straight from disk, send it as an attachment, or host it anywhere static. Rebuild it with
 `npm run build:single`.
 
 ## Running locally
@@ -62,7 +71,7 @@ npm start            # serve dist/ with the Node server at http://localhost:4173
 npm run build:single # rebuild demo/lews-electrical-demo.html
 ```
 
-When the site is served by `npm start`, the quote form posts to `POST /api/enquiry` and enquiries are stored in
+When the site is served by `npm start`, the contact form posts to `POST /api/enquiry` and enquiries are stored in
 `data/enquiries.ndjson`. On static hosting (GitHub Pages, the single file) the form runs in demo mode and says so.
 
 ## Project layout
@@ -70,22 +79,22 @@ When the site is served by `npm start`, the quote form posts to `POST /api/enqui
 ```
 src/
   App.tsx              page composition
-  data/site.ts         all business details and copy (phone, services, FAQs, coverage)
+  data/site.ts         all business details and wording (phone, services, checklists, FAQs, areas)
   sections/            one file per page section
-  components/          nav, demo bar, wordmark, shared UI
-  lib/                 smooth scroll and quote-form state
-  assets/images/       stock photography (see CREDITS.md)
-  assets/fonts/        Archivo, Inter and JetBrains Mono (SIL OFL)
-panda.config.ts        colours, type styles, keyframes
+  components/          header, logo, shared UI (buttons, tick lists, red highlight)
+  lib/contact.tsx      "get a quote" buttons that jump to the form with the service picked
+  assets/images/       Essex and London photography (see CREDITS.md)
+  assets/fonts/        Barlow and Barlow Condensed (SIL OFL)
+panda.config.ts        colours, type styles
 server.mjs             production server + enquiry endpoint
 scripts/inline-build.mjs  builds the single-file demo
 ```
 
 ## Before going live
 
-- Swap the stock photos for real project photos, and the drawn wordmark for the client's logo files.
-- Add genuine reviews (none are shown, so nothing is invented).
+- Replace the stock photos with real job photos, and the drawn wordmark with the client's logo files.
+- Add genuine Google or Checkatrade reviews (none are shown, so nothing is invented).
 - Connect `/api/enquiry` to email or a CRM, or point the form at a form service.
-- Remove the demo bar and the `noindex` meta tag and `robots.txt` rule, then point www.lewselectrical.co.uk at the
-  host.
-- Confirm the coverage list, accreditations and referral terms with the client.
+- Remove the concept strip, the `noindex` meta tag and the `robots.txt` rule, then point www.lewselectrical.co.uk at
+  the host.
+- Confirm the areas covered, the FAQ answers, the rail wording and the referral terms with the client.

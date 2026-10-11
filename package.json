@@ -17,8 +17,6 @@
     "typecheck": "panda codegen && tsc -p tsconfig.json"
   },
   "dependencies": {
-    "framer-motion": "^14.1.0",
-    "lenis": "^1.3.26",
     "lucide-react": "^1.55.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"

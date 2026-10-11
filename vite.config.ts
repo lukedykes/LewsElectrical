@@ -3,16 +3,16 @@ import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // `vite build --mode single` produces one self-contained HTML file (see scripts/inline-build.mjs).
-// In that mode every photo resolves to its 960px variant to keep the file small.
+// In that mode every photo resolves to its small variant to keep the file small.
 function smallImagesForSingleFile(): Plugin {
   return {
     name: 'single-file-small-images',
     enforce: 'pre',
     async resolveId(source, importer, options) {
-      if (!source.endsWith('.webp') || source.endsWith('-960.webp')) return null
+      if (!source.endsWith('.webp') || source.endsWith('-sm.webp')) return null
       const resolved = await this.resolve(source, importer, { ...options, skipSelf: true })
       if (!resolved || !resolved.id.includes('/assets/images/')) return resolved
-      const small = resolved.id.replace(/\.webp$/, '-960.webp')
+      const small = resolved.id.replace(/\.webp$/, '-sm.webp')
       return existsSync(small) ? small : resolved
     },
   }

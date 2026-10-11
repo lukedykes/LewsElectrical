@@ -1,61 +1,50 @@
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion'
 import { Phone } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { css } from '../../styled-system/css'
+import { css, cx } from '../../styled-system/css'
 import { business } from '../data/site'
-import { useQuote } from '../lib/quote'
-import { Button, ButtonLink, easeOut } from './ui'
+import { useContact } from '../lib/contact'
+import { Button, ButtonLink } from './ui'
 
-/** Thumb-reach call and quote buttons on phones, out of the way near the form. */
+/** Call and quote buttons within thumb reach on phones. */
 export function MobileCallBar() {
-  const { scrollY } = useScroll()
-  const { startQuote } = useQuote()
-  const [pastHero, setPastHero] = useState(false)
-  const [nearForm, setNearForm] = useState(false)
-
-  useMotionValueEvent(scrollY, 'change', (y) => setPastHero(y > window.innerHeight * 0.8))
+  const { openContact } = useContact()
+  const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    const targets = ['quote'].map((id) => document.getElementById(id)).filter((el): el is HTMLElement => !!el)
-    const observer = new IntersectionObserver((entries) => setNearForm(entries.some((e) => e.isIntersecting)), { rootMargin: '0px 0px -20% 0px' })
-    targets.forEach((el) => observer.observe(el))
-    return () => observer.disconnect()
+    const onScroll = () => setVisible(window.scrollY > 500)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
-    <AnimatePresence>
-      {pastHero && !nearForm && (
-        <motion.div
-          initial={{ y: '120%' }}
-          animate={{ y: '0%' }}
-          exit={{ y: '120%' }}
-          transition={{ duration: 0.5, ease: easeOut }}
-          className={css({
-            position: 'fixed',
-            left: '3',
-            right: '3',
-            bottom: 'max(12px, env(safe-area-inset-bottom))',
-            zIndex: '40',
-            display: { base: 'grid', lg: 'none' },
-            gridTemplateColumns: '1fr 1.3fr',
-            gap: '2',
-            p: '2',
-            rounded: '2xl',
-            bg: 'rgba(7, 14, 34, 0.82)',
-            border: '1px solid',
-            borderColor: 'line.default',
-            backdropFilter: 'blur(18px) saturate(1.4)',
-            boxShadow: '0 20px 50px -10px rgba(0,0,0,0.7)',
-          })}
-        >
-          <ButtonLink href={business.phoneHref} variant="ghost" size="md">
-            <Phone size={16} aria-hidden /> Call
-          </ButtonLink>
-          <Button size="md" arrow onClick={() => startQuote()}>
-            Free quote
-          </Button>
-        </motion.div>
+    <div
+      aria-hidden={!visible}
+      className={cx(
+        css({
+          position: 'fixed',
+          insetX: '0',
+          bottom: '0',
+          zIndex: '30',
+          display: { base: 'grid', xl: 'none' },
+          gridTemplateColumns: '1fr 1fr',
+          gap: '2',
+          p: '2',
+          pb: 'max(0.5rem, env(safe-area-inset-bottom))',
+          bg: 'white',
+          borderTop: '1px solid {colors.paper.300}',
+          boxShadow: '0 -6px 20px rgba(10, 30, 69, 0.12)',
+          transition: 'transform 0.25s',
+        }),
+        visible ? css({ transform: 'translateY(0)' }) : css({ transform: 'translateY(110%)' }),
       )}
-    </AnimatePresence>
+    >
+      <ButtonLink href={business.phoneHref} variant="navy" tabIndex={visible ? 0 : -1}>
+        <Phone size={17} aria-hidden /> Call now
+      </ButtonLink>
+      <Button onClick={() => openContact()} tabIndex={visible ? 0 : -1}>
+        Free quote
+      </Button>
+    </div>
   )
 }

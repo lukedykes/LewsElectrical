@@ -1,4 +1,5 @@
-// Everything the client might want to change lives here.
+// Everything the client might want to change lives here. Most of the wording
+// comes straight from Lews Electrical's own flyers.
 
 export const business = {
   name: 'Lews Electrical Ltd',
@@ -20,182 +21,170 @@ export const studio = {
 
 export const navLinks = [
   { label: 'Services', href: '#services' },
-  { label: 'Sectors', href: '#sectors' },
-  { label: 'How it works', href: '#process' },
-  { label: 'Refer & earn', href: '#refer' },
-  { label: 'FAQ', href: '#faq' },
+  { label: 'Rewires', href: '#rewires' },
+  { label: 'Commercial', href: '#commercial' },
+  { label: 'Refer a friend', href: '#refer' },
+  { label: 'Areas', href: '#areas' },
+  { label: 'FAQs', href: '#faq' },
 ]
 
-export type SectorId = 'domestic' | 'commercial' | 'rail'
+export type ServiceIcon = 'home' | 'board' | 'test' | 'fault' | 'lighting' | 'cctv' | 'maintenance'
 
-export const sectors: {
-  id: SectorId
-  label: string
-  title: string
-  body: string
-  points: string[]
-  image: 'kitchen' | 'retail' | 'rail'
-}[] = [
+export const services: { title: string; body: string; icon: ServiceIcon; enquiry: string }[] = [
   {
-    id: 'domestic',
-    label: 'Domestic',
-    title: 'Homes & families',
-    body: 'Rewires, fuse board upgrades, new sockets and lighting, smart and outdoor lighting, plus EICRs for homeowners and landlords.',
-    points: ['Full & part rewires', 'Consumer units', 'Smart & external lighting', 'Landlord EICRs'],
-    image: 'kitchen',
-  },
-  {
-    id: 'commercial',
-    label: 'Commercial',
-    title: 'Shops, salons, offices & more',
-    body: 'Lighting design, power and data, distribution boards and emergency lighting, planned around your opening hours.',
-    points: ['Retail & salons', 'Hospitality', 'Offices', 'Gyms & studios'],
-    image: 'retail',
-  },
-  {
-    id: 'rail',
-    label: 'Rail',
-    title: 'Rail infrastructure',
-    body: 'Electrical work for the rail industry, delivered with the safety culture, planning and paperwork the sector demands.',
-    points: ['Infrastructure', 'Testing & inspection', 'Maintenance', 'Reactive works'],
-    image: 'rail',
-  },
-]
-
-export type ServiceImage =
-  | 'rewire'
-  | 'distribution-board'
-  | 'consumer-unit'
-  | 'boards'
-  | 'pendants'
-  | 'cctv'
-  | 'electrician'
-
-export const services: { id: string; title: string; body: string; tags: string[]; image: ServiceImage }[] = [
-  {
-    id: 'rewire',
     title: 'Full rewires',
-    body: 'Old wiring out, a safe modern installation in. Planned room by room to keep disruption to a minimum.',
-    tags: ['Domestic', 'Part rewires', 'New sockets & switches'],
-    image: 'rewire',
+    body: 'Complete and part rewires for houses and flats, planned room by room to keep disruption down.',
+    icon: 'home',
+    enquiry: 'Full rewire',
   },
   {
-    id: 'fuse-boards',
     title: 'New fuse boards',
-    body: 'Single and three-phase consumer unit and distribution board upgrades with modern RCD and RCBO protection.',
-    tags: ['Single phase', 'Three phase', 'Surge protection'],
-    image: 'distribution-board',
+    body: 'Consumer unit and distribution board upgrades, single and three phase, with up-to-date RCD protection.',
+    icon: 'board',
+    enquiry: 'Fuse board upgrade',
   },
   {
-    id: 'eicr',
     title: 'Testing & inspection (EICR)',
-    body: 'Condition reports for homeowners, landlords and businesses. Clear results and clear next steps.',
-    tags: ['Landlords', 'Home buyers', 'Commercial'],
-    image: 'consumer-unit',
+    body: 'Electrical Installation Condition Reports for homeowners, landlords and businesses.',
+    icon: 'test',
+    enquiry: 'EICR / testing',
   },
   {
-    id: 'fault-finding',
     title: 'Fault finding',
-    body: 'Tripping circuits, dead sockets, flickering lights. We trace it, fix it and explain what went wrong.',
-    tags: ['Tripping RCDs', 'Power loss', 'Repairs'],
-    image: 'boards',
+    body: 'Tripping switches, dead sockets or flickering lights. We track down the fault and put it right.',
+    icon: 'fault',
+    enquiry: 'Fault finding',
   },
   {
-    id: 'lighting',
     title: 'Lighting design & installation',
-    body: 'Feature, ambient, smart and outdoor lighting that makes a space feel finished, inside and out.',
-    tags: ['Smart lighting', 'Feature & ambient', 'External'],
-    image: 'pendants',
+    body: 'Indoor, outdoor, feature and smart lighting for homes, shops and workplaces.',
+    icon: 'lighting',
+    enquiry: 'Lighting',
   },
   {
-    id: 'cctv',
     title: 'CCTV installation',
-    body: 'Discreet, reliable camera systems that protect your home or business and are simple to check from your phone.',
-    tags: ['Homes', 'Businesses', 'Remote viewing'],
-    image: 'cctv',
+    body: 'Camera systems for homes and businesses that you can check from your phone.',
+    icon: 'cctv',
+    enquiry: 'CCTV',
   },
   {
-    id: 'maintenance',
-    title: 'Maintenance & reactive call-outs',
-    body: 'Planned maintenance and responsive call-outs that keep homes, shops and sites up and running.',
-    tags: ['Planned maintenance', 'Call-outs', 'Emergency lighting'],
-    image: 'electrician',
+    title: 'Maintenance & reactive call outs',
+    body: 'Planned maintenance, and a quick response when something stops working.',
+    icon: 'maintenance',
+    enquiry: 'Maintenance / call out',
   },
 ]
 
-export const rewireSigns: { id: string; label: string; weight: number; urgent?: boolean }[] = [
-  { id: 'fusebox', label: 'An old fuse box with pull-out fuses or a wooden back board', weight: 2 },
-  { id: 'flicker', label: 'Lights flicker or dim when appliances switch on', weight: 1 },
-  { id: 'tripping', label: 'Breakers trip or fuses blow regularly', weight: 1 },
-  { id: 'scorch', label: 'Scorch marks, buzzing or warm sockets and switches', weight: 3, urgent: true },
-  { id: 'sockets', label: 'Not enough sockets, with extension leads everywhere', weight: 1 },
-  { id: 'cables', label: 'Round-pin sockets, or rubber or fabric covered cables', weight: 2 },
-  { id: 'eicr', label: 'No EICR in the last 10 years (5 if you rent it out)', weight: 1 },
+export const rewire = {
+  benefits: ['Improve safety in your home', 'Increase property value', 'Modern and reliable installations', 'Fully tested & certified work'],
+  checklist: [
+    'Complete home rewires',
+    'Modern distribution boards (single & three phase)',
+    'New sockets, lighting & switches',
+    'Smart lighting',
+    'External lighting',
+    'Testing & inspection (EICR)',
+    'Fault finding',
+    'Maintenance & repairs',
+    'Minimal disruption & tidy work',
+    'Free quotes & friendly advice',
+  ],
+  signs: [
+    'An old fuse box with pull-out fuses',
+    'Round-pin sockets or fabric-covered cable',
+    'Scorch marks, or sockets and switches that feel warm',
+    'A breaker that keeps tripping',
+    'Extension leads everywhere because there aren’t enough sockets',
+    'No electrical check in the last ten years',
+  ],
+}
+
+export const commercial = {
+  benefits: ['Enhance your space', 'Improve customer experience', 'Support business growth'],
+  checklist: [
+    'New lighting design & installation',
+    'Feature & ambient lighting',
+    'Smart lighting solutions',
+    'Power & data for workstations',
+    'Distribution board upgrades',
+    'Emergency lighting',
+    'Testing & inspection (EICR)',
+    'Minimal disruption to your business',
+    'Free quotes & friendly advice',
+  ],
+  venues: ['Retail', 'Salons', 'Hospitality', 'Offices', 'Gyms & studios'],
+}
+
+export const steps = [
+  { title: 'Get in touch', body: 'Call, text or send us a message about what you need doing.' },
+  { title: 'Free quote', body: 'We come and take a look or talk it through, then send you a clear written price.' },
+  { title: 'The work', body: 'Booked in at a time that suits you, carried out safely and left tidy.' },
+  { title: 'Signed off', body: 'Everything is tested and certified, and you get the paperwork for your records.' },
 ]
 
-export const processSteps = [
-  {
-    title: 'Get in touch',
-    body: 'Call, text or send the form. Tell us what you need, big job or small.',
-  },
-  {
-    title: 'Free, written quote',
-    body: 'We visit or talk it through, then put a clear price in writing. No pressure.',
-  },
-  {
-    title: 'Tidy installation',
-    body: 'Work is planned around you, with minimal disruption and a clean finish.',
-  },
-  {
-    title: 'Tested & certified',
-    body: 'Everything is tested and certified, and we walk you through it before we leave.',
-  },
+export const reasons = [
+  { title: 'NICEIC approved', body: 'Our work is regularly assessed against the national safety standard.' },
+  { title: 'City & Guilds qualified', body: 'Properly trained and working to the current wiring regulations.' },
+  { title: 'Tidy and considerate', body: 'Minimal disruption while we work, and we clear up before we leave.' },
+  { title: 'Free quotes', body: 'Friendly advice and a clear written price, with no obligation.' },
+]
+
+export const areas = [
+  'Southend-on-Sea',
+  'Leigh-on-Sea',
+  'Rayleigh',
+  'Basildon',
+  'Billericay',
+  'Wickford',
+  'Brentwood',
+  'Chelmsford',
+  'Romford',
+  'Grays & Thurrock',
+  'Colchester',
+  'East London',
+  'Central London',
 ]
 
 export const faqs = [
   {
     q: 'How long does a full house rewire take?',
-    a: 'Most three-bedroom homes take around a week, depending on size, access and whether you are living in the property. You get a firm timeline with your quote, and the work is planned room by room to keep disruption down.',
+    a: 'It depends on the size of the property and whether you are living there while the work is done. As a rough guide, a typical three-bedroom house takes around one to two weeks. You get a clear timeline with your quote.',
   },
   {
     q: 'What is an EICR and how often do I need one?',
-    a: 'An Electrical Installation Condition Report is a full check of your wiring, protection and fittings against the current wiring regulations (BS 7671). The usual guidance is every 10 years for homeowners and at least every 5 years for rented homes. Most commercial premises need one every 5 years, and some more often.',
+    a: 'An Electrical Installation Condition Report is a full check of your wiring, fuse board and fittings against the current regulations (BS 7671). Homeowners are usually advised to have one every 10 years, and rented homes need one at least every 5 years. Most businesses need one every 5 years, and some more often.',
   },
   {
-    q: 'Can you upgrade my old fuse box?',
-    a: 'Yes. We replace old fuse boxes with modern consumer units that have RCD and RCBO protection, in single or three phase. Modern boards trip in a fraction of a second when something goes wrong, which makes a real difference to safety.',
+    q: 'Can you replace my old fuse box?',
+    a: 'Yes. We replace old fuse boxes with modern consumer units with RCD and RCBO protection, in single or three phase.',
   },
   {
     q: 'Are you NICEIC approved?',
-    a: 'Yes. Lews Electrical is an NICEIC Approved Contractor, so our work is regularly assessed against the national safety standard, and every job comes with the right certification.',
+    a: 'Yes, we are an NICEIC Approved Contractor and City & Guilds qualified, and every job comes with the right certificates.',
   },
   {
-    q: 'Do you work around business opening hours?',
-    a: 'Yes. For shops, salons and offices we plan the work around you, including early starts, evenings or phased installs, to keep disruption to a minimum.',
+    q: 'Can you work around my business opening hours?',
+    a: 'Yes. For shops, salons and offices we plan the work around you, with early starts, evenings or work done in stages if needed.',
   },
   {
     q: 'Do you charge for quotes?',
-    a: 'No. Quotes and advice are free, with no obligation. Tell us what you need and we will give you an honest, written price.',
+    a: 'No. Quotes and advice are free and there is no obligation.',
   },
   {
     q: 'How does the referral reward work?',
-    a: 'Recommend us to a friend, family member or business. Once their installation is complete, you receive £50 for your first referral and £150 for your second.',
+    a: 'Recommend us to a friend, family member or business. Once their installation is complete you get £50 for your first referral and £150 for your second.',
   },
 ]
 
-export const coverage = {
-  essex: ['CM', 'CO', 'SS', 'RM', 'IG', 'EN'],
-  london: ['E', 'EC', 'N', 'NW', 'SE', 'SW', 'W', 'WC', 'BR', 'CR', 'DA', 'HA', 'KT', 'SM', 'TW', 'UB'],
-}
-
-export const quoteServices = [
+export const enquiryTypes = [
   'Full rewire',
   'Fuse board upgrade',
   'EICR / testing',
   'Fault finding',
   'Lighting',
   'CCTV',
-  'Sockets & switches',
-  'Maintenance',
+  'Maintenance / call out',
+  'Shop, salon or office work',
+  'Rail',
   'Something else',
 ]
