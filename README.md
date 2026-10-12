@@ -18,8 +18,8 @@ The site is built from the client's own printed flyers rather than a generic tem
 - **Their words.** Headlines, checklists and offers come from the flyers: "Expert electrical solutions", "Do you need
   your home rewired?", "Got a shop or salon that needs modernising?", "Refer a friend and be rewarded!", the red tick
   lists and the round "A safer, brighter home starts here" badge.
-- **Local photography.** Southend Pier, Westcliff, Rayleigh, Southend High Street, c2c and Greater Anglia trains, all
-  from Wikimedia Commons with credits in the footer.
+- **Local photography.** Southend Pier at sunset, Leigh-on-Sea, Westcliff, Rayleigh, Southend High Street and Chappel
+  Viaduct, all from Wikimedia Commons with credits in the footer. No trains or stations, at the client's request.
 - **Plain and practical.** No animation tricks. Phone number on every screen, a sticky call bar on phones, a simple
   contact form and fast pages (about 1.2 MB of images in total).
 
