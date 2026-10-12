@@ -49,7 +49,8 @@ The site is built from the client's own printed flyers rather than a generic tem
 
 1. Make sure Pages is available for the repository. Pages on a **private** repo needs a paid GitHub plan; on the free
    plan, make the repo public first (Settings → General → Danger zone → Change visibility).
-2. Settings → Pages → Build and deployment → Source: **GitHub Actions**.
+2. Settings → Pages → Build and deployment → Source: **GitHub Actions**. Don't add any of the suggested workflows
+   GitHub offers there: this repo already has its own (`.github/workflows/pages.yml`).
 3. Merge this branch into `main`. The `GitHub Pages` workflow builds and deploys, and the site appears at
    https://lukedykes.github.io/LewsElectrical/. You can also deploy any branch by hand from the Actions tab
    (GitHub Pages → Run workflow); if GitHub refuses with "environment protection rules", add the branch under
