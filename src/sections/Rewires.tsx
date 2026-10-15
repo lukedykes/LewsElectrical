@@ -1,11 +1,26 @@
 import { AlertTriangle, Check, House, ShieldCheck, Sparkles, TrendingUp, type LucideIcon } from 'lucide-react'
 import { css, cx } from '../../styled-system/css'
-import { photos } from '../assets/images'
+import { photos, work } from '../assets/images'
 import { Button, container, coverImage, Highlight, IconCircle, Img, Kicker, sectionY, TickList } from '../components/ui'
 import { rewire } from '../data/site'
 import { useContact } from '../lib/contact'
 
 const benefitIcons: LucideIcon[] = [ShieldCheck, TrendingUp, Sparkles, Check]
+
+const photoLabel = css({
+  position: 'absolute',
+  px: '2.5',
+  py: '1',
+  rounded: '4px',
+  color: 'white',
+  fontFamily: 'heading',
+  fontWeight: '700',
+  fontSize: { base: '0.78rem', md: '0.88rem' },
+  textTransform: 'uppercase',
+  letterSpacing: '0.06em',
+  lineHeight: '1.3',
+  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
+})
 
 export function Rewires() {
   const { openContact } = useContact()
@@ -13,23 +28,42 @@ export function Rewires() {
   return (
     <section id="rewires" className={cx(sectionY, css({ bg: 'paper.100' }))}>
       <div className={cx(container, css({ display: 'grid', gridTemplateColumns: { base: 'minmax(0, 1fr)', lg: 'minmax(0, 0.95fr) minmax(0, 1.05fr)' }, gap: { base: '10', lg: '16' }, alignItems: 'center' }))}>
-        <figure className={css({ position: 'relative', m: '0' })}>
-          <div className={css({ aspectRatio: { base: '4 / 3', lg: '4 / 5' }, rounded: '8px', overflow: 'hidden', bg: 'navy.900' })}>
-            <Img photo={photos.home} sizes="(min-width: 1024px) 45vw, 100vw" className={coverImage} />
+        {/* Before and after: first fix, then the finished kitchen, overlapping like prints on a table. */}
+        <figure className={css({ position: 'relative', m: '0', pb: { base: '20', md: '28', lg: '24' } })}>
+          <div className={css({ position: 'relative', w: { base: '100%', lg: '84%' }, ml: 'auto', aspectRatio: { base: '4 / 3', lg: '4 / 5' }, rounded: '8px', overflow: 'hidden', bg: 'navy.900', boxShadow: '0 18px 40px rgba(10, 30, 69, 0.18)' })}>
+            <Img photo={work.stripOutElectrician} sizes="(min-width: 1024px) 40vw, 100vw" className={coverImage} />
+            <span className={cx(photoLabel, css({ right: '3', top: '3', bg: 'navy.900' }))}>Before · First fix</span>
           </div>
-          <figcaption className={css({ fontSize: '0.8rem', color: 'muted', mt: '2' })}>{photos.home.caption}</figcaption>
+          <div
+            className={css({
+              position: 'absolute',
+              left: { base: '0', lg: '-4' },
+              bottom: '0',
+              w: { base: '62%', lg: '64%' },
+              aspectRatio: '4 / 3',
+              rounded: '8px',
+              overflow: 'hidden',
+              bg: 'navy.900',
+              border: { base: '4px solid white', md: '6px solid white' },
+              boxShadow: '0 24px 50px rgba(10, 30, 69, 0.3)',
+            })}
+          >
+            <Img photo={work.kitchenPeninsula} sizes="(min-width: 1024px) 28vw, 62vw" className={coverImage} />
+            <span className={cx(photoLabel, css({ left: '2.5', top: '2.5', bg: 'crimson.600' }))}>After · Finished</span>
+          </div>
+          <figcaption className={css({ srOnly: true })}>A kitchen job by Lews Electrical, from first fix to finished.</figcaption>
           {/* The round badge from the flyer. */}
           <span
             aria-hidden
             className={css({
               position: 'absolute',
-              right: { base: '3', md: '-5' },
-              bottom: { base: '10', md: '12' },
+              left: { base: '3', lg: '-2' },
+              top: { base: '3', lg: '10' },
               display: 'grid',
               placeItems: 'center',
               textAlign: 'center',
-              w: { base: '28', md: '36' },
-              h: { base: '28', md: '36' },
+              w: { base: '24', sm: '28', md: '36' },
+              h: { base: '24', sm: '28', md: '36' },
               p: '3',
               rounded: 'full',
               bg: 'crimson.600',
@@ -39,8 +73,8 @@ export function Rewires() {
             })}
           >
             <span>
-              <House size={26} className={css({ mx: 'auto' })} />
-              <span className={css({ display: 'block', fontFamily: 'heading', fontWeight: '700', textTransform: 'uppercase', lineHeight: '1.05', fontSize: { base: '0.8rem', md: '0.95rem' }, mt: '1' })}>
+              <House size={24} className={css({ mx: 'auto' })} />
+              <span className={css({ display: 'block', fontFamily: 'heading', fontWeight: '700', textTransform: 'uppercase', lineHeight: '1.05', fontSize: { base: '0.7rem', sm: '0.8rem', md: '0.95rem' }, mt: '1' })}>
                 A safer, brighter home starts here
               </span>
             </span>
@@ -126,7 +160,7 @@ export function Rewires() {
               </div>
               <div>
                 <div className={css({ aspectRatio: '4 / 3', rounded: '6px', overflow: 'hidden', bg: 'paper.200' })}>
-                  <Img photo={photos.newBoard} sizes="(min-width: 768px) 20vw, 50vw" className={coverImage} />
+                  <Img photo={work.consumerUnit} sizes="(min-width: 768px) 20vw, 50vw" className={coverImage} />
                 </div>
                 <p className={css({ fontFamily: 'heading', fontWeight: '700', textTransform: 'uppercase', fontSize: '0.9rem', color: 'navy.900', mt: '2' })}>A modern consumer unit</p>
               </div>

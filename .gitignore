@@ -6,3 +6,5 @@ styled-system
 .DS_Store
 .vite
 /data/
+scripts/photos/.cache/
+__pycache__/

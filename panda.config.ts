@@ -21,6 +21,20 @@ export default defineConfig({
 
   theme: {
     extend: {
+      keyframes: {
+        riseIn: {
+          from: { opacity: '0', transform: 'translateY(16px) scale(0.985)' },
+          to: { opacity: '1', transform: 'none' },
+        },
+        fadeIn: {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
+        zoomIn: {
+          from: { opacity: '0', transform: 'scale(0.97)' },
+          to: { opacity: '1', transform: 'none' },
+        },
+      },
       tokens: {
         colors: {
           navy: {

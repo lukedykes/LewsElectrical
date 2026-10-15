@@ -1,0 +1,87 @@
+{
+  "air-conditioning": {
+    "width": 1600,
+    "height": 1451,
+    "smallWidth": 720
+  },
+  "cctv-dome": {
+    "width": 1500,
+    "height": 1458,
+    "smallWidth": 720
+  },
+  "consumer-unit": {
+    "width": 1600,
+    "height": 1176,
+    "smallWidth": 720
+  },
+  "decking-lights": {
+    "width": 1314,
+    "height": 1600,
+    "smallWidth": 720
+  },
+  "extension-uplights": {
+    "width": 1394,
+    "height": 1232,
+    "smallWidth": 720
+  },
+  "garage-floodlight": {
+    "width": 1500,
+    "height": 1486,
+    "smallWidth": 720
+  },
+  "garage-wall-lights": {
+    "width": 1500,
+    "height": 1106,
+    "smallWidth": 720
+  },
+  "garage-wall-lights-close": {
+    "width": 1500,
+    "height": 1084,
+    "smallWidth": 720
+  },
+  "hero": {
+    "width": 1484,
+    "height": 1600,
+    "smallWidth": 720
+  },
+  "kitchen-corner": {
+    "width": 1237,
+    "height": 1600,
+    "smallWidth": 720
+  },
+  "kitchen-peninsula": {
+    "width": 1440,
+    "height": 1080,
+    "smallWidth": 720
+  },
+  "kitchen-strip-out": {
+    "width": 1200,
+    "height": 1600,
+    "smallWidth": 720
+  },
+  "kitchen-strip-out-electrician": {
+    "width": 1200,
+    "height": 1600,
+    "smallWidth": 720
+  },
+  "kitchen-window": {
+    "width": 1043,
+    "height": 1600,
+    "smallWidth": 720
+  },
+  "media-wall": {
+    "width": 1314,
+    "height": 1600,
+    "smallWidth": 720
+  },
+  "media-wall-angle": {
+    "width": 1144,
+    "height": 1600,
+    "smallWidth": 720
+  },
+  "soffit-downlights": {
+    "width": 1500,
+    "height": 1096,
+    "smallWidth": 720
+  }
+}

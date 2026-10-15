@@ -7,6 +7,7 @@ import { Commercial } from './sections/Commercial'
 import { Contact } from './sections/Contact'
 import { Faq } from './sections/Faq'
 import { Footer } from './sections/Footer'
+import { Gallery } from './sections/Gallery'
 import { Hero, SectorStrip } from './sections/Hero'
 import { HowWeWork } from './sections/HowWeWork'
 import { Rail } from './sections/Rail'
@@ -41,6 +42,7 @@ export function App() {
         <Hero />
         <SectorStrip />
         <Services />
+        <Gallery />
         <Rewires />
         <Commercial />
         <Rail />

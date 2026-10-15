@@ -15,7 +15,7 @@ export function Footer() {
       <div className={container}>
         <div className={css({ display: 'grid', gridTemplateColumns: { base: 'minmax(0, 1fr)', md: 'repeat(2, minmax(0, 1fr))', lg: 'minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 1.25fr)' }, gap: '10' })}>
           <div>
-            <Logo onNavy tagline />
+            <Logo onNavy tagline sizes="220px" imgCss={css.raw({ h: { base: '16', md: '20' } })} />
             <p className={css({ mt: '5', maxW: '22rem' })}>Electrical contractors for homes, businesses and the rail industry, across Essex and London.</p>
             <ul className={css({ display: 'grid', gap: '2', mt: '5', fontWeight: '600', color: 'white' })}>
               {business.accreditations.map((item) => (
@@ -70,6 +70,7 @@ export function Footer() {
 
         <details className={css({ mt: '12', pt: '6', borderTop: '1px solid {colors.lineOnNavy}', fontSize: '0.85rem' })}>
           <summary className={css({ cursor: 'pointer', fontWeight: '600', color: 'white', w: 'fit-content' })}>Photo credits</summary>
+          <p className={css({ mt: '3', color: 'navy.200' })}>Job photos are Lews Electrical’s own work. The local scenery photos are from Wikimedia Commons:</p>
           <ul className={css({ display: 'grid', gap: '1.5', mt: '3', color: 'navy.200' })}>
             {credits.map((c) => (
               <li key={c.source}>
@@ -84,7 +85,7 @@ export function Footer() {
               </li>
             ))}
           </ul>
-          <p className={css({ mt: '3', color: 'navy.200' })}>Photos have been resized and cropped. Shown as examples only, not work carried out by Lews Electrical.</p>
+          <p className={css({ mt: '3', color: 'navy.200' })}>These have been resized and cropped, and show places we cover, not work carried out by Lews Electrical.</p>
         </details>
 
         <div className={css({ display: 'flex', flexDir: { base: 'column', md: 'row' }, justifyContent: 'space-between', gap: '3', mt: '6', fontSize: '0.85rem', color: 'navy.200' })}>

@@ -62,8 +62,8 @@ export function Header() {
         )}
       >
         <nav aria-label="Main" className={cx(container, css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: { base: '3', md: '6' }, h: { base: '16', md: '20' } }))}>
-          <a href="#top" onClick={() => setOpen(false)}>
-            <Logo />
+          <a href="#top" onClick={() => setOpen(false)} className={css({ flexShrink: '0' })}>
+            <Logo imgCss={css.raw({ h: { base: '12', md: '16' } })} sizes="(min-width: 768px) 163px, 122px" />
           </a>
 
           <ul className={css({ display: { base: 'none', xl: 'flex' }, alignItems: 'center', gap: '6' })}>

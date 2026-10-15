@@ -18,10 +18,15 @@ The site is built from the client's own printed flyers rather than a generic tem
 - **Their words.** Headlines, checklists and offers come from the flyers: "Expert electrical solutions", "Do you need
   your home rewired?", "Got a shop or salon that needs modernising?", "Refer a friend and be rewarded!", the red tick
   lists and the round "A safer, brighter home starts here" badge.
-- **Local photography.** Southend Pier at sunset, Leigh-on-Sea, Westcliff, Rayleigh, Southend High Street and Chappel
-  Viaduct, all from Wikimedia Commons with credits in the footer. No trains or stations, at the client's request.
-- **Plain and practical.** No animation tricks. Phone number on every screen, a sticky call bar on phones, a simple
-  contact form and fast pages (about 1.2 MB of images in total).
+- **Their logo and their own work.** The real cable-lettering logo, and Lews Electrical's own job photos throughout:
+  the media wall in the hero, first fix and finished kitchen in the rewires section, a new consumer unit, and a
+  filterable gallery of 16 jobs. Every photo is cleaned up, upscaled and colour-graded the same way (see below).
+- **Local scenery where there's no job photo yet.** Commercial, rail and the areas map still use photos of Southend,
+  Islington, Chappel Viaduct and Leigh-on-Sea from Wikimedia Commons (plus one example of an old fuse board), credited
+  in the footer. No trains or stations, at the
+  client's request.
+- **Plain and practical.** Gentle motion only (and none if the visitor has reduced motion turned on). Phone number on
+  every screen, a sticky call bar on phones, a simple contact form, and photos sized for each screen.
 
 ## Sections
 
@@ -29,14 +34,16 @@ The site is built from the client's own printed flyers rather than a generic tem
 2. Hero: "Expert electrical solutions" for homes, businesses and the rail industry
 3. Domestic, commercial and rail panels
 4. Services (the seven services from the flyer)
-5. Home rewires, with warning signs and fuse board photos
-6. Shops, salons and workplaces
-7. Rail infrastructure
-8. How it works and why choose Lews
-9. Refer a friend (£50 / £150)
-10. Areas covered
-11. FAQs
-12. Contact form and details
+5. Our work: a gallery of real jobs in justified rows, with filters and a full-screen viewer (keyboard, swipe,
+   thumbnails)
+6. Home rewires, with a before-and-after pair, warning signs and fuse board photos
+7. Shops, salons and workplaces
+8. Rail infrastructure
+9. How it works and why choose Lews
+10. Refer a friend (£50 / £150)
+11. Areas covered
+12. FAQs
+13. Contact form and details
 
 ## Stack
 
@@ -83,17 +90,42 @@ src/
   data/site.ts         all business details and wording (phone, services, checklists, FAQs, areas)
   sections/            one file per page section
   components/          header, logo, shared UI (buttons, tick lists, red highlight)
+  data/gallery.ts      gallery order, captions' tags and filters
   lib/contact.tsx      "get a quote" buttons that jump to the form with the service picked
-  assets/images/       Essex and London photography (see CREDITS.md)
+  lib/justify.ts       justified-rows layout for the gallery
+  assets/images/work/  graded job photos (generated, see below)
+  assets/images/       local scenery photography (see CREDITS.md)
+  assets/brand/        the logo, for dark and light backgrounds (generated)
   assets/fonts/        Barlow and Barlow Condensed (SIL OFL)
+photos/originals/      the client's untouched photos and logo
 panda.config.ts        colours, type styles
 server.mjs             production server + enquiry endpoint
 scripts/inline-build.mjs  builds the single-file demo
+scripts/photos/grade.py   grades the job photos, logo and sharing image
 ```
+
+## Job photos
+
+Originals go in `photos/originals/`. `scripts/photos/grade.py` has a short recipe for each photo (crop, then how much
+white balance, exposure, shadow lift, contrast, clarity, vibrance, warm-and-navy split tone and vignette). It cleans
+up JPEG noise, upscales anything small 2x with the FSRCNN super-resolution model, grades it, and writes a large and a
+small WebP to `src/assets/images/work/` with the sizes in `manifest.json`. It also makes the two logo files and
+`public/og.jpg`.
+
+```bash
+pip install pillow numpy opencv-contrib-python-headless fonttools brotli
+python3 scripts/photos/grade.py --sheet   # all photos, plus a before/after contact sheet in scripts/photos/.cache/
+python3 scripts/photos/grade.py media-wall # just one
+```
+
+To add a photo: drop it in `photos/originals/`, add a recipe in `grade.py`, run it, then add it to
+`src/assets/images/work.ts` (alt text and caption) and `src/data/gallery.ts` (position and filters).
 
 ## Before going live
 
-- Replace the stock photos with real job photos, and the drawn wordmark with the client's logo files.
+- Swap the remaining Wikimedia photos (commercial panel and bar, rail, areas, and the "older fuse board" example) for
+  job photos when there are some, and confirm the kitchen first fix and finished photos are the same job (they're
+  shown as a before and after).
 - Add genuine Google or Checkatrade reviews (none are shown, so nothing is invented).
 - Connect `/api/enquiry` to email or a CRM, or point the form at a form service.
 - Remove the concept strip, the `noindex` meta tag and the `robots.txt` rule, then point www.lewselectrical.co.uk at

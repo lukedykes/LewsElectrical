@@ -21,6 +21,7 @@ export const studio = {
 
 export const navLinks = [
   { label: 'Services', href: '#services' },
+  { label: 'Our work', href: '#work' },
   { label: 'Rewires', href: '#rewires' },
   { label: 'Commercial', href: '#commercial' },
   { label: 'Refer a friend', href: '#refer' },

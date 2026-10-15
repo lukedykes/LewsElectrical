@@ -1,6 +1,6 @@
 import { ArrowRight, BadgeCheck, Phone } from 'lucide-react'
 import { css, cx } from '../../styled-system/css'
-import { photos, type Photo } from '../assets/images'
+import { photos, work, type Photo } from '../assets/images'
 import { Button, ButtonLink, container, coverImage, Highlight, Img, Kicker } from '../components/ui'
 import { business } from '../data/site'
 import { useContact } from '../lib/contact'
@@ -52,10 +52,10 @@ export function Hero() {
           {/* Thin red slash along the slanted edge, as on the flyers. */}
           <span aria-hidden className={css({ display: { base: 'none', lg: 'block' }, position: 'absolute', inset: '0', bg: 'crimson.600', clipPath: 'polygon(10.5% 0, 100% 0, 100% 100%, 0 100%)' })} />
           <div className={css({ position: 'absolute', inset: '0', clipPath: { lg: 'polygon(12.5% 0, 100% 0, 100% 100%, 2% 100%)' } })}>
-            <Img photo={photos.hero} priority sizes="(min-width: 1024px) 50vw, 100vw" className={coverImage} />
+            <Img photo={work.hero} priority sizes="(min-width: 1024px) 50vw, 100vw" className={coverImage} />
           </div>
           <figcaption className={css({ position: 'absolute', right: '3', bottom: '3', fontSize: '0.75rem', color: 'white', bg: 'rgba(6, 20, 48, 0.6)', px: '2', py: '1', rounded: '4px' })}>
-            {photos.hero.caption}
+            {work.hero.caption} by Lews Electrical
           </figcaption>
         </figure>
       </div>
@@ -64,7 +64,7 @@ export function Hero() {
 }
 
 const sectors: { label: string; text: string; href: string; photo: Photo }[] = [
-  { label: 'Domestic', text: 'Homes & families', href: '#rewires', photo: photos.domestic },
+  { label: 'Domestic', text: 'Homes & families', href: '#rewires', photo: work.garageWallLights },
   { label: 'Commercial', text: 'Shops, salons & offices', href: '#commercial', photo: photos.commercial },
   { label: 'Rail', text: 'Rail infrastructure', href: '#rail', photo: photos.rail },
 ]
