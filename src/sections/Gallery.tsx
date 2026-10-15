@@ -2,7 +2,7 @@ import { Expand, FileText, Phone } from 'lucide-react'
 import { useRef, useState, type CSSProperties } from 'react'
 import { css, cx } from '../../styled-system/css'
 import { Lightbox } from '../components/Lightbox'
-import { Button, ButtonLink, container, Highlight, SectionIntro, sectionY, srcSetFor } from '../components/ui'
+import { Button, ButtonLink, container, Highlight, retryImage, SectionIntro, sectionY, srcSetFor } from '../components/ui'
 import { gallery, galleryFilters, type GalleryFilter } from '../data/gallery'
 import { business } from '../data/site'
 import { useContact } from '../lib/contact'
@@ -179,7 +179,7 @@ export function Gallery() {
                       height={item.photo.height}
                       alt={item.photo.alt}
                       loading="lazy"
-                      decoding="async"
+                      onError={retryImage(item.photo)}
                       style={{ aspectRatio: `${item.photo.width} / ${item.photo.height}`, objectPosition: item.photo.position }}
                       className={css({ display: 'block', w: '100%', h: '100%', objectFit: 'cover' })}
                     />

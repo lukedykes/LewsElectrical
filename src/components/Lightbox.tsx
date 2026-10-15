@@ -1,16 +1,8 @@
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { useCallback, useEffect, useRef, type PointerEvent } from 'react'
 import { css, cx } from '../../styled-system/css'
-import type { Photo } from '../assets/images'
 import type { GalleryItem } from '../data/gallery'
-import { srcSetFor } from './ui'
-
-// The viewer's photo is as wide as the screen allows, or as wide as its shape allows once the height is used up.
-// The preloads use the same value, so both pick the same file.
-const viewerSizes = (photo: Photo) => {
-  const ratio = (photo.width / photo.height).toFixed(3)
-  return `(min-width: 768px) min(80vw, calc((100vh - 240px) * ${ratio})), min(100vw, calc((100vh - 200px) * ${ratio}))`
-}
+import { retryImage } from './ui'
 
 const navButton = css({
   display: 'grid',
@@ -94,14 +86,8 @@ export function Lightbox({ items, index, onIndex, onClose }: {
     if (index === null || count === 0) return
     const neighbours = index > 0 ? [index + 1, index - 1] : [index + 1]
     for (const i of neighbours) {
-      const photo = items[i % count].photo
-      const img = new Image()
-      const srcSet = srcSetFor(photo)
-      if (srcSet) {
-        img.sizes = viewerSizes(photo)
-        img.srcset = srcSet
-      }
-      img.src = photo.small
+      // The viewer always shows the large file (no srcset to second-guess), so that's what to fetch.
+      new Image().src = items[i % count].photo.src
     }
     thumbs.current?.querySelector('[aria-current="true"]')?.scrollIntoView({ block: 'nearest', inline: 'center' })
   }, [index, items, count])
@@ -219,9 +205,8 @@ export function Lightbox({ items, index, onIndex, onClose }: {
               })}
             >
               <img
-                src={photo.small}
-                srcSet={srcSetFor(photo)}
-                sizes={srcSetFor(photo) && viewerSizes(photo)}
+                src={photo.src}
+                onError={retryImage(photo)}
                 width={photo.width}
                 height={photo.height}
                 alt={photo.alt}
@@ -320,7 +305,7 @@ export function Lightbox({ items, index, onIndex, onClose }: {
                     _focusVisible: { opacity: 1, outlineColor: 'white', outlineWidth: '3px' },
                   })}
                 >
-                  <img src={item.photo.thumb ?? item.photo.small} alt="" loading="lazy" decoding="async" className={css({ w: '100%', h: '100%', objectFit: 'cover' })} />
+                  <img src={item.photo.thumb ?? item.photo.small} alt="" loading="lazy" onError={retryImage({ src: item.photo.small, small: item.photo.thumb ?? item.photo.small })} className={css({ w: '100%', h: '100%', objectFit: 'cover' })} />
                 </button>
               ))}
             </div>

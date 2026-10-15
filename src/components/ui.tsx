@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
-import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'react'
+import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode, SyntheticEvent } from 'react'
 import { css, cva, cx, type RecipeVariantProps } from '../../styled-system/css'
 import type { SystemStyleObject } from '../../styled-system/types'
 import type { Photo } from '../assets/images'
@@ -149,6 +149,32 @@ export function srcSetFor(photo: Photo) {
   return photo.small === photo.src ? undefined : `${photo.small} ${photo.smallWidth}w, ${photo.src} ${photo.width}w`
 }
 
+const fileOf = (url: string) => (url.startsWith('data:') ? url : url.split('?')[0].split('/').pop())
+
+/**
+ * onError handler that makes a photo heal itself. If a file fails (a dropped connection,
+ * or a page cached from before a deploy), it tries the photo's other size, then that
+ * file once more, fresh. If that fails too, the photo is hidden so its tile shows a plain
+ * background instead of a broken-image icon.
+ */
+export function retryImage(photo: { src: string; small: string }) {
+  return (e: SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget
+    const tries = Number(img.dataset.retries ?? '0')
+    if (tries >= 2) {
+      img.style.visibility = 'hidden'
+      return
+    }
+    img.dataset.retries = String(tries + 1)
+    img.removeAttribute('srcset')
+    img.removeAttribute('sizes')
+    img.loading = 'eager'
+    const failed = fileOf(img.currentSrc || img.src)
+    const next = tries === 0 ? (failed === fileOf(photo.small) ? photo.src : photo.small) : img.src.split('?')[0]
+    img.src = tries === 0 || next.startsWith('data:') ? next : `${next}?retry=${Date.now()}`
+  }
+}
+
 export function Img({ photo, sizes = '100vw', className, priority, alt }: {
   photo: Photo
   sizes?: string
@@ -166,8 +192,8 @@ export function Img({ photo, sizes = '100vw', className, priority, alt }: {
       height={photo.height}
       alt={alt ?? photo.alt}
       loading={priority ? 'eager' : 'lazy'}
-      decoding="async"
       fetchPriority={priority ? 'high' : 'auto'}
+      onError={retryImage(photo)}
       className={className}
       style={photo.position ? { objectPosition: photo.position } : undefined}
     />

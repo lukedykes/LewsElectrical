@@ -1,5 +1,6 @@
 import { css, cx } from '../../styled-system/css'
 import type { SystemStyleObject } from '../../styled-system/types'
+import { retryImage } from './ui'
 import onDark320 from '../assets/brand/logo-on-dark-320.webp'
 import onDark640 from '../assets/brand/logo-on-dark-640.webp'
 import onLight320 from '../assets/brand/logo-on-light-320.webp'
@@ -32,7 +33,7 @@ export function Logo({ onNavy, tagline, className, imgCss, sizes = '150px', lazy
         height={HEIGHT}
         alt="Lews Electrical Ltd"
         loading={lazy ? 'lazy' : undefined}
-        decoding="async"
+        onError={retryImage({ src: large, small })}
         className={css({ display: 'block', h: { base: '11', md: '14' }, w: 'auto' }, imgCss)}
       />
       {tagline && (
