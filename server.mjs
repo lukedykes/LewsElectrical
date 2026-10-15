@@ -2,7 +2,7 @@
 //
 //   npm run build && npm start      ->  http://localhost:4173
 //
-// Serves dist/ with long-lived caching for hashed assets, and accepts quote
+// Serves dist/ (assets cached for ten minutes, then revalidated), and accepts quote
 // requests at POST /api/enquiry (stored as JSON lines in data/enquiries.ndjson).
 // On static hosting such as GitHub Pages the form falls back to demo mode.
 import { createServer } from 'node:http'
@@ -78,11 +78,19 @@ async function handleEnquiry(req, res) {
   }
 }
 
-async function serveFile(res, path, method) {
+async function serveFile(req, res, path) {
   const info = await stat(path)
   if (!info.isFile()) throw new Error('Not a file')
   const ext = extname(path)
-  const immutable = path.startsWith(join(root, 'assets') + sep)
+  // Built files have fixed names (see vite.config.ts), so they're cached briefly and then
+  // revalidated rather than kept forever.
+  const isAsset = path.startsWith(join(root, 'assets') + sep)
+  const lastModified = new Date(Math.floor(info.mtimeMs / 1000) * 1000)
+  const since = Date.parse(req.headers['if-modified-since'] ?? '')
+  if (ext !== '.html' && !Number.isNaN(since) && since >= lastModified.getTime()) {
+    res.writeHead(304, { 'Last-Modified': lastModified.toUTCString() })
+    return res.end()
+  }
   let body = await readFile(path)
   if (ext === '.html') {
     // Tell the page this host can take enquiries (static hosts leave the form in demo mode).
@@ -92,9 +100,10 @@ async function serveFile(res, path, method) {
     ...securityHeaders,
     'Content-Type': types[ext] ?? 'application/octet-stream',
     'Content-Length': body.length,
-    'Cache-Control': immutable ? 'public, max-age=31536000, immutable' : 'no-cache',
+    'Cache-Control': isAsset ? 'public, max-age=600' : 'no-cache',
+    'Last-Modified': lastModified.toUTCString(),
   })
-  res.end(method === 'HEAD' ? undefined : body)
+  res.end(req.method === 'HEAD' ? undefined : body)
 }
 
 const server = createServer(async (req, res) => {
@@ -118,11 +127,11 @@ const server = createServer(async (req, res) => {
   if (requested !== root && !requested.startsWith(root + sep)) return send(res, 403, 'Forbidden')
 
   try {
-    await serveFile(res, url.pathname.endsWith('/') ? join(requested, 'index.html') : requested, req.method)
+    await serveFile(req, res, url.pathname.endsWith('/') ? join(requested, 'index.html') : requested)
   } catch {
     try {
       // Single-page app: unknown routes get the shell.
-      await serveFile(res, join(root, 'index.html'), req.method)
+      await serveFile(req, res, join(root, 'index.html'))
     } catch {
       send(res, 500, 'Build not found. Run `npm run build` first.')
     }

@@ -35,7 +35,19 @@ export default defineConfig(({ mode }) => {
         }
       : {
           outDir: 'dist',
-          assetsInlineLimit: 4096,
+          // Photos are always separate files (smaller script, and each one can retry on its own).
+          assetsInlineLimit: (file: string) => (/\.(webp|jpe?g|png|avif)$/i.test(file) ? false : undefined),
+          // No content hashes in file names. GitHub Pages caches every file for about ten
+          // minutes and each deploy replaces the whole site, so a hashed name from the last
+          // deploy that's still cached in someone's browser would point at a file that's gone
+          // (broken photos or a blank page). With fixed names every file is always there.
+          rolldownOptions: {
+            output: {
+              entryFileNames: 'assets/[name].js',
+              chunkFileNames: 'assets/[name].js',
+              assetFileNames: (asset) => (/\.(webp|jpe?g|png|avif)$/i.test(asset.names?.[0] ?? '') ? 'assets/photos/[name][extname]' : 'assets/[name][extname]'),
+            },
+          },
           // One page, one bundle: React, framer-motion and the Panda runtime come to ~165 kB gzipped.
           chunkSizeWarningLimit: 700,
         },
