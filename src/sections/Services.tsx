@@ -1,6 +1,6 @@
 import { ArrowRight, Cctv, CircuitBoard, ClipboardCheck, House, Lightbulb, Phone, Search, Settings, type LucideIcon } from 'lucide-react'
 import { css, cx } from '../../styled-system/css'
-import { ButtonLink, container, Highlight, IconCircle, Kicker, sectionY } from '../components/ui'
+import { Bullets, ButtonLink, container, Highlight, IconTile, SectionIntro, sectionY, trackedLink } from '../components/ui'
 import { business, services, type ServiceIcon } from '../data/site'
 import { useContact } from '../lib/contact'
 
@@ -18,60 +18,56 @@ export function Services() {
   const { openContact } = useContact()
 
   return (
-    <section id="services" className={cx(sectionY, css({ bg: 'white' }))}>
+    <section id="services" className={cx(sectionY, css({ bg: 'paper.100' }))}>
       <div className={container}>
-        <div className={css({ maxW: '44rem' })}>
-          <Kicker>What we do</Kicker>
-          <h2 className={css({ textStyle: 'h2', mt: '3' })}>
-            Our <Highlight>services</Highlight>
-          </h2>
-          <p className={css({ textStyle: 'lead', color: 'muted', mt: '5' })}>
-            Everything from a new socket to a full rewire, for homes, shops, offices and the rail industry. All work is tested and
-            certified.
-          </p>
-        </div>
+        <SectionIntro
+          kicker="What we do"
+          title={
+            <>
+              Our <Highlight>services</Highlight>
+            </>
+          }
+          lead="Everything from a new socket to a full rewire, for homes, shops, offices and the rail industry. All work is tested and certified."
+        />
 
-        <ul className={css({ display: 'grid', gridTemplateColumns: { base: 'minmax(0, 1fr)', sm: 'repeat(2, minmax(0, 1fr))', lg: 'repeat(4, minmax(0, 1fr))' }, gap: '5', mt: '12' })}>
+        <ul className={css({ display: 'grid', gridTemplateColumns: { base: 'minmax(0, 1fr)', sm: 'repeat(2, minmax(0, 1fr))', lg: 'repeat(4, minmax(0, 1fr))' }, gap: { base: '4', md: '5' } })}>
           {services.map((service) => (
             <li
               key={service.title}
               className={css({
                 display: 'flex',
                 flexDir: 'column',
-                p: '6',
-                rounded: '8px',
-                border: '1px solid {colors.paper.200}',
-                borderTop: '4px solid {colors.crimson.600}',
+                p: { base: '7', md: '7' },
                 bg: 'white',
-                boxShadow: '0 1px 2px rgba(10, 30, 69, 0.04)',
+                border: '1px solid {colors.paper.200}',
+                rounded: '4px',
+                transition: 'box-shadow 0.25s, transform 0.25s',
+                _canHover: { _hover: { boxShadow: '0 20px 40px -24px rgba(10, 30, 69, 0.35)', transform: 'translateY(-2px)' } },
               })}
             >
-              <IconCircle icon={icons[service.icon]} />
-              <h3 className={css({ textStyle: 'h3', color: 'navy.900', mt: '5' })}>{service.title}</h3>
-              <p className={css({ color: 'muted', mt: '2', flex: '1' })}>{service.body}</p>
-              <button
-                type="button"
-                onClick={() => openContact(service.enquiry)}
-                className={css({
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '1.5',
-                  alignSelf: 'flex-start',
-                  mt: '5',
-                  fontWeight: '700',
-                  color: 'crimson.600',
-                  cursor: 'pointer',
-                  _hover: { textDecoration: 'underline', textUnderlineOffset: '3px' },
-                })}
-              >
-                Get a quote <ArrowRight size={16} aria-hidden />
-              </button>
+              <IconTile icon={icons[service.icon]} />
+              <h3 className={css({ textStyle: 'h3', color: 'navy.950', mt: '6' })}>{service.title}</h3>
+              <p className={css({ color: 'ink.500', mt: '3' })}>{service.body}</p>
+              <hr className={css({ border: 'none', borderTop: '1px solid {colors.paper.300}', my: '5' })} />
+              <Bullets items={service.points} className={css({ flex: '1' })} />
+              <div className={css({ display: 'flex', flexWrap: 'wrap', columnGap: '6', rowGap: '3', mt: '6' })}>
+                <button type="button" onClick={() => openContact(service.enquiry)} className={trackedLink}>
+                  Get a quote <ArrowRight size={18} aria-hidden />
+                </button>
+                {service.icon === 'lighting' && (
+                  <a href="#lighting" className={cx(trackedLink, css({ color: 'navy.950' }))}>
+                    See lighting <ArrowRight size={18} aria-hidden />
+                  </a>
+                )}
+              </div>
             </li>
           ))}
-          <li className={css({ display: 'flex', flexDir: 'column', justifyContent: 'center', p: '6', rounded: '8px', bg: 'navy.900', color: 'white' })}>
-            <h3 className={css({ textStyle: 'h3' })}>Not sure what you need?</h3>
-            <p className={css({ color: 'navy.200', mt: '2' })}>Give us a call for friendly, no-obligation advice.</p>
-            <ButtonLink href={business.phoneHref} variant="red" className={css({ mt: '5', alignSelf: 'flex-start' })}>
+          <li className={css({ display: 'flex', flexDir: 'column', justifyContent: 'center', p: '7', rounded: '4px', bg: 'navy.950', color: 'white' })}>
+            <h3 className={css({ textStyle: 'h3', fontSize: '2rem' })}>
+              Not sure what <Highlight>you need?</Highlight>
+            </h3>
+            <p className={css({ color: 'navy.200', mt: '3' })}>Give us a call for friendly, no-obligation advice.</p>
+            <ButtonLink href={business.phoneHref} variant="red" className={css({ mt: '6', alignSelf: 'flex-start' })}>
               <Phone size={17} aria-hidden /> {business.phone}
             </ButtonLink>
           </li>

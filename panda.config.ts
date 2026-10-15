@@ -2,8 +2,9 @@ import { defineConfig } from '@pandacss/dev'
 import pandaBase from '@pandacss/preset-base'
 import pandaPreset from '@pandacss/preset-panda'
 
-// Colours and type follow the client's printed flyers: deep navy, signal red,
-// white, and heavy italic condensed capitals for headlines.
+// Colours follow the client's printed flyers (deep navy, signal red, white). The
+// layout language (heavy upright condensed capitals, tracked red labels with a
+// rule, thick dividers, soft icon tiles) follows the reference site they liked.
 export default defineConfig({
   presets: [pandaBase, pandaPreset],
   preflight: true,
@@ -21,6 +22,24 @@ export default defineConfig({
 
   theme: {
     extend: {
+      keyframes: {
+        riseIn: {
+          from: { opacity: '0', transform: 'translateY(16px) scale(0.985)' },
+          to: { opacity: '1', transform: 'none' },
+        },
+        fadeIn: {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
+        zoomIn: {
+          from: { opacity: '0', transform: 'scale(0.97)' },
+          to: { opacity: '1', transform: 'none' },
+        },
+        marquee: {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-50%)' },
+        },
+      },
       tokens: {
         colors: {
           navy: {
@@ -35,6 +54,8 @@ export default defineConfig({
             700: { value: '#A30D24' },
             600: { value: '#C8102E' },
             500: { value: '#DD1A36' },
+            // For small red text on navy or over photos (about 7:1 on navy.950).
+            300: { value: '#FF8A99' },
             100: { value: '#FBE7EA' },
           },
           ink: {
@@ -74,42 +95,50 @@ export default defineConfig({
         display: {
           value: {
             fontFamily: 'heading',
-            fontWeight: '800',
-            fontStyle: 'italic',
+            fontWeight: '900',
             textTransform: 'uppercase',
-            fontSize: 'clamp(2.75rem, 6.2vw, 5.5rem)',
-            lineHeight: '0.92',
-            letterSpacing: '0.005em',
+            fontSize: 'clamp(3.1rem, 7.4vw, 6.4rem)',
+            lineHeight: '0.88',
+            letterSpacing: '-0.012em',
           },
         },
         h2: {
           value: {
             fontFamily: 'heading',
             fontWeight: '800',
-            fontStyle: 'italic',
             textTransform: 'uppercase',
-            fontSize: 'clamp(2.1rem, 4.4vw, 3.6rem)',
-            lineHeight: '0.95',
-            letterSpacing: '0.005em',
+            fontSize: 'clamp(2.4rem, 5vw, 4rem)',
+            lineHeight: '0.92',
+            letterSpacing: '-0.008em',
           },
         },
         h3: {
           value: {
             fontFamily: 'heading',
-            fontWeight: '700',
+            fontWeight: '800',
             textTransform: 'uppercase',
-            fontSize: '1.4rem',
-            lineHeight: '1.1',
-            letterSpacing: '0.01em',
+            fontSize: '1.6rem',
+            lineHeight: '1.02',
+            letterSpacing: '0',
           },
         },
         kicker: {
           value: {
             fontFamily: 'heading',
-            fontWeight: '600',
+            fontWeight: '700',
             textTransform: 'uppercase',
-            fontSize: '1.05rem',
-            letterSpacing: '0.08em',
+            fontSize: '0.95rem',
+            letterSpacing: '0.26em',
+            lineHeight: '1.2',
+          },
+        },
+        tracked: {
+          value: {
+            fontFamily: 'heading',
+            fontWeight: '800',
+            textTransform: 'uppercase',
+            fontSize: '0.98rem',
+            letterSpacing: '0.16em',
             lineHeight: '1.2',
           },
         },
@@ -132,11 +161,16 @@ export default defineConfig({
       WebkitFontSmoothing: 'antialiased',
       MozOsxFontSmoothing: 'grayscale',
       scrollPaddingTop: '96px',
+      // Keeps focused elements clear of the phone contact bar.
+      scrollPaddingBottom: { base: '5rem', lg: '0' },
       _motionSafe: { scrollBehavior: 'smooth' },
     },
     body: {
       lineHeight: '1.6',
       overflowX: 'clip',
+    },
+    'p, li, figcaption, summary': {
+      textWrap: 'pretty',
     },
     '::selection': {
       bg: 'crimson.600',

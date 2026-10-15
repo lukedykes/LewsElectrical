@@ -11,32 +11,43 @@ until the client signs off.
 
 ## Design approach
 
-The site is built from the client's own printed flyers rather than a generic template, so it looks like their business:
+The site is built from the client's own printed flyers and photos, laid out in the style of a reference site the
+client liked:
 
-- **Their colours and type.** Deep navy, signal red and white, with heavy italic condensed capitals for headlines
-  (Barlow Condensed) and the slanted red banner behind key words, as on the flyers. Body text is Barlow.
+- **Their colours, the reference's layout.** Deep navy, signal red and white from the flyers. From the reference:
+  heavy upright condensed capitals (Barlow Condensed 800/900) with the key word in red, tracked red labels with a
+  short rule, thick dividers under each section intro, soft icon tiles, red square bullets, a scrolling services band,
+  contact rows, and an always-visible Call / WhatsApp / Free quote bar on phones. Body text is Barlow.
 - **Their words.** Headlines, checklists and offers come from the flyers: "Expert electrical solutions", "Do you need
   your home rewired?", "Got a shop or salon that needs modernising?", "Refer a friend and be rewarded!", the red tick
   lists and the round "A safer, brighter home starts here" badge.
-- **Local photography.** Southend Pier at sunset, Leigh-on-Sea, Westcliff, Rayleigh, Southend High Street and Chappel
-  Viaduct, all from Wikimedia Commons with credits in the footer. No trains or stations, at the client's request.
-- **Plain and practical.** No animation tricks. Phone number on every screen, a sticky call bar on phones, a simple
-  contact form and fast pages (about 1.2 MB of images in total).
+- **Their logo and their own work.** The real cable-lettering logo, and Lews Electrical's own job photos throughout:
+  the media wall in the hero, first fix and finished kitchen in the rewires section, a new consumer unit, and a
+  filterable gallery of 16 job photos. Every photo is cleaned up, upscaled where needed and colour-graded the same
+  way (see below), and house numbers are blurred.
+- **Local scenery where there's no job photo yet.** The commercial panel and section and the areas map still use photos
+  of Southend, Islington and Leigh-on-Sea from Wikimedia Commons (plus one example of an old fuse board), credited in
+  the footer. Rail has an icon tile instead of a picture: no trains or stations, at the client's request.
+- **Plain and practical.** Gentle motion only (the scrolling band can be paused, and nothing moves if the visitor has
+  reduced motion turned on). Phone number on every screen, a simple contact form, and photos sized for each screen.
 
 ## Sections
 
 1. Header with accreditations, phone, email and a sticky menu
-2. Hero: "Expert electrical solutions" for homes, businesses and the rail industry
-3. Domestic, commercial and rail panels
-4. Services (the seven services from the flyer)
-5. Home rewires, with warning signs and fuse board photos
-6. Shops, salons and workplaces
-7. Rail infrastructure
-8. How it works and why choose Lews
-9. Refer a friend (£50 / £150)
-10. Areas covered
-11. FAQs
-12. Contact form and details
+2. Hero: "Expert electrical solutions." with the media wall photo
+3. Scrolling band of services (pausable)
+4. Who we work for: domestic, commercial and rail
+5. Services (the seven services from the flyer, each with key points)
+6. Photo library: real jobs in justified rows, with filters and a full-screen viewer (keyboard, swipe, thumbnails)
+7. Home rewires, with work-in-progress and finished photos, warning signs and fuse board photos
+8. Lighting design and installation
+9. Shops, salons and workplaces
+10. Rail infrastructure
+11. How it works and why choose Lews
+12. Refer a friend (£50 / £150)
+13. Areas covered
+14. FAQs
+15. Contact: call, WhatsApp, email and the quote form
 
 ## Stack
 
@@ -83,17 +94,44 @@ src/
   data/site.ts         all business details and wording (phone, services, checklists, FAQs, areas)
   sections/            one file per page section
   components/          header, logo, shared UI (buttons, tick lists, red highlight)
+  data/gallery.ts      gallery order, captions' tags and filters
   lib/contact.tsx      "get a quote" buttons that jump to the form with the service picked
-  assets/images/       Essex and London photography (see CREDITS.md)
+  lib/justify.ts       justified-rows layout for the gallery
+  assets/images/work/  graded job photos (generated, see below)
+  assets/images/       local scenery photography (see CREDITS.md)
+  assets/brand/        the logo, for dark and light backgrounds (generated)
   assets/fonts/        Barlow and Barlow Condensed (SIL OFL)
+photos/originals/      the client's untouched photos and logo
 panda.config.ts        colours, type styles
 server.mjs             production server + enquiry endpoint
 scripts/inline-build.mjs  builds the single-file demo
+scripts/photos/grade.py   grades the job photos, logo and sharing image
 ```
+
+## Job photos
+
+Originals go in `photos/originals/`. `scripts/photos/grade.py` has a short recipe for each photo (crop, then how much
+white balance, exposure, shadow lift, contrast, clarity, vibrance, warm-and-navy split tone and vignette). It cleans
+up JPEG noise, upscales anything small 2x with the FSRCNN super-resolution model, grades it, and writes a large and a
+small WebP to `src/assets/images/work/` with the sizes in `manifest.json`. It also makes the two logo files and
+`public/og.jpg`.
+
+```bash
+pip install pillow numpy opencv-contrib-python-headless fonttools brotli
+python3 scripts/photos/grade.py --sheet   # all photos, plus a before/after contact sheet in scripts/photos/.cache/
+python3 scripts/photos/grade.py media-wall # just one
+```
+
+To add a photo: drop it in `photos/originals/`, add a recipe in `grade.py`, run it, then add it to
+`src/assets/images/work.ts` (alt text and caption) and `src/data/gallery.ts` (position and filters).
 
 ## Before going live
 
-- Replace the stock photos with real job photos, and the drawn wordmark with the client's logo files.
+- Confirm 07964 154458 is on WhatsApp. The contact section, footer and phone bar link to it (`whatsappHref` in
+  `src/data/site.ts`).
+- Swap the remaining Wikimedia photos (commercial panel and bar, areas, and the "older fuse board" example) for job
+  photos when there are some, add a rail job photo if there is one, and confirm the kitchen first fix and finished photos are the same job (they're
+  shown side by side in the rewires section).
 - Add genuine Google or Checkatrade reviews (none are shown, so nothing is invented).
 - Connect `/api/enquiry` to email or a CRM, or point the form at a form service.
 - Remove the concept strip, the `noindex` meta tag and the `robots.txt` rule, then point www.lewselectrical.co.uk at

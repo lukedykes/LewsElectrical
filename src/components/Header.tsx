@@ -28,14 +28,14 @@ export function Header() {
   return (
     <>
       {/* Says plainly that this is a pitch, not the live site. */}
-      <p className={css({ bg: 'paper.100', color: 'ink.500', fontSize: '0.8rem', textAlign: 'center', py: '1.5', px: '4' })}>
+      <aside aria-label="About this website" className={css({ bg: 'paper.100', color: 'ink.500', fontSize: '0.8rem', textAlign: 'center', py: '1.5', px: '4' })}>
         Website concept for {business.name}, designed by{' '}
         <a href={studio.url} target="_blank" rel="noreferrer" className={css({ color: 'navy.900', fontWeight: '600', textDecoration: 'underline', textUnderlineOffset: '2px' })}>
           {studio.name}
         </a>
-      </p>
+      </aside>
 
-      <div className={css({ display: { base: 'none', md: 'block' }, bg: 'navy.950', color: 'white', fontSize: '0.9rem' })}>
+      <aside aria-label="Accreditations and contact details" className={css({ display: { base: 'none', md: 'block' }, bg: 'navy.950', color: 'white', fontSize: '0.9rem' })}>
         <div className={cx(container, css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between', h: '10', gap: '6' }))}>
           <ul className={css({ display: 'flex', gap: '6' })}>
             {[...business.accreditations, 'Free quotes'].map((item) => (
@@ -53,7 +53,7 @@ export function Header() {
             </a>
           </div>
         </div>
-      </div>
+      </aside>
 
       <header
         className={cx(
@@ -62,8 +62,8 @@ export function Header() {
         )}
       >
         <nav aria-label="Main" className={cx(container, css({ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: { base: '3', md: '6' }, h: { base: '16', md: '20' } }))}>
-          <a href="#top" onClick={() => setOpen(false)}>
-            <Logo />
+          <a href="#top" onClick={() => setOpen(false)} className={css({ flexShrink: '0' })}>
+            <Logo imgCss={css.raw({ h: { base: '12', md: '16' } })} sizes="(min-width: 768px) 163px, 122px" />
           </a>
 
           <ul className={css({ display: { base: 'none', xl: 'flex' }, alignItems: 'center', gap: '6' })}>
@@ -74,14 +74,14 @@ export function Header() {
                   className={css({
                     fontFamily: 'heading',
                     fontWeight: '700',
-                    fontSize: '1.08rem',
+                    fontSize: '1rem',
                     textTransform: 'uppercase',
-                    letterSpacing: '0.03em',
+                    letterSpacing: '0.1em',
                     whiteSpace: 'nowrap',
                     color: 'navy.900',
                     py: '2',
-                    borderBottom: '3px solid transparent',
-                    _hover: { borderColor: 'crimson.600' },
+                    borderBottom: '2px solid transparent',
+                    _hover: { borderColor: 'crimson.600', color: 'crimson.600' },
                   })}
                 >
                   {link.label}
@@ -95,22 +95,23 @@ export function Header() {
             <span className={css({ display: { base: 'none', sm: 'inline-flex' } })}>
               <Button onClick={() => openContact()}>Get a free quote</Button>
             </span>
-            <span className={css({ display: { base: 'inline-flex', xl: 'none' }, gap: '2' })}>
-              <span className={css({ display: 'inline-flex', '@media (max-width: 359px)': { display: 'none' } })}>
-                <ButtonLink href={business.phoneHref} variant="outline" size="icon" aria-label={`Call ${business.phone}`}>
-                  <Phone size={18} aria-hidden />
-                </ButtonLink>
-              </span>
-              <Button
-                variant="navy"
-                size="icon"
+            <span className={css({ display: { base: 'inline-flex', xl: 'none' }, alignItems: 'center', gap: { base: '0', sm: '1' } })}>
+              <a href={business.phoneHref} aria-label={`Call ${business.phone}`} className={iconButton}>
+                <Phone size={24} strokeWidth={1.6} aria-hidden />
+              </a>
+              <a href={`mailto:${business.email}`} aria-label={`Email ${business.email}`} className={cx(iconButton, css({ '@media (max-width: 359px)': { display: 'none' } }))}>
+                <Mail size={24} strokeWidth={1.6} aria-hidden />
+              </a>
+              <button
+                type="button"
                 aria-label={open ? 'Close menu' : 'Open menu'}
                 aria-expanded={open}
                 aria-controls="mobile-menu"
                 onClick={() => setOpen((v) => !v)}
+                className={iconButton}
               >
-                {open ? <X size={20} aria-hidden /> : <Menu size={20} aria-hidden />}
-              </Button>
+                {open ? <X size={28} strokeWidth={1.8} aria-hidden /> : <Menu size={28} strokeWidth={1.8} aria-hidden />}
+              </button>
             </span>
           </div>
         </nav>
@@ -118,7 +119,15 @@ export function Header() {
         <div
           id="mobile-menu"
           hidden={!open}
-          className={css({ display: { xl: 'none' }, borderTop: '1px solid {colors.paper.200}', bg: 'white', boxShadow: '0 16px 30px rgba(10, 30, 69, 0.12)' })}
+          className={css({
+            display: { xl: 'none' },
+            maxH: { base: 'calc(100dvh - 7.5rem)', md: 'calc(100dvh - 9.6rem)' },
+            overflowY: 'auto',
+            overscrollBehavior: 'contain',
+            borderTop: '1px solid {colors.paper.200}',
+            bg: 'white',
+            boxShadow: '0 16px 30px rgba(10, 30, 69, 0.12)',
+          })}
         >
           <ul className={cx(container, css({ py: '3' }))}>
             {navLinks.map((link) => (
@@ -130,10 +139,10 @@ export function Header() {
                     display: 'block',
                     py: '3',
                     fontFamily: 'heading',
-                    fontWeight: '700',
-                    fontSize: '1.3rem',
+                    fontWeight: '800',
+                    fontSize: '1.5rem',
                     textTransform: 'uppercase',
-                    color: 'navy.900',
+                    color: 'navy.950',
                     borderBottom: '1px solid {colors.paper.200}',
                   })}
                 >
@@ -147,7 +156,8 @@ export function Header() {
               size="lg"
               onClick={() => {
                 setOpen(false)
-                openContact()
+                // Let the menu close first so the scroll lands in the right place.
+                requestAnimationFrame(() => openContact())
               }}
             >
               Get a free quote
@@ -161,3 +171,15 @@ export function Header() {
     </>
   )
 }
+
+const iconButton = css({
+  display: 'grid',
+  placeItems: 'center',
+  w: '11',
+  h: '11',
+  color: 'navy.950',
+  rounded: '8px',
+  cursor: 'pointer',
+  transition: 'color 0.15s, background 0.15s',
+  _hover: { color: 'crimson.600', bg: 'paper.100' },
+})

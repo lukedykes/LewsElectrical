@@ -30,7 +30,8 @@ export default defineConfig(({ mode }) => {
           cssCodeSplit: false,
           modulePreload: false,
           rolldownOptions: { output: { codeSplitting: false } },
-          chunkSizeWarningLimit: 2000,
+          // Every photo, font and the logo are inlined, so the one bundle is big by design.
+          chunkSizeWarningLimit: 4000,
         }
       : {
           outDir: 'dist',

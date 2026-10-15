@@ -13,7 +13,8 @@ export function ContactProvider({ children }: { children: ReactNode }) {
 
   const openContact = useCallback((type?: string) => {
     if (type) setEnquiry({ type, nonce: Date.now() })
-    document.getElementById('contact')?.scrollIntoView({ block: 'start' })
+    // Straight to the form card (on phones it sits below the contact details).
+    ;(document.getElementById('quote') ?? document.getElementById('contact'))?.scrollIntoView({ block: 'start' })
   }, [])
 
   const value = useMemo(() => ({ enquiry, openContact }), [enquiry, openContact])

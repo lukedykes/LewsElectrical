@@ -9,7 +9,7 @@ export function Faq() {
       <div className={cx(container, css({ display: 'grid', gridTemplateColumns: { base: 'minmax(0, 1fr)', lg: 'minmax(0, 0.8fr) minmax(0, 1.2fr)' }, gap: { base: '10', lg: '16' } }))}>
         <div>
           <Kicker>FAQs</Kicker>
-          <h2 className={css({ textStyle: 'h2', mt: '3' })}>
+          <h2 className={css({ textStyle: 'h2', mt: '4' })}>
             Common <Highlight>questions</Highlight>
           </h2>
           <p className={css({ color: 'ink.700', mt: '5' })}>Can’t see your question here? Get in touch and we’ll be happy to help.</p>

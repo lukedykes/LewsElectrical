@@ -7,8 +7,10 @@ import { Commercial } from './sections/Commercial'
 import { Contact } from './sections/Contact'
 import { Faq } from './sections/Faq'
 import { Footer } from './sections/Footer'
-import { Hero, SectorStrip } from './sections/Hero'
+import { Gallery } from './sections/Gallery'
+import { Hero, SectorStrip, Ticker } from './sections/Hero'
 import { HowWeWork } from './sections/HowWeWork'
+import { Lighting } from './sections/Lighting'
 import { Rail } from './sections/Rail'
 import { Referral } from './sections/Referral'
 import { Rewires } from './sections/Rewires'
@@ -39,9 +41,12 @@ export function App() {
       <Header />
       <main id="main">
         <Hero />
+        <Ticker />
         <SectorStrip />
         <Services />
+        <Gallery />
         <Rewires />
+        <Lighting />
         <Commercial />
         <Rail />
         <HowWeWork />
