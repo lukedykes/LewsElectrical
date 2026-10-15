@@ -7,7 +7,7 @@ export const galleryFilters: { id: GalleryFilter; label: string }[] = [
   { id: 'indoor', label: 'Indoor lighting' },
   { id: 'outdoor', label: 'Outdoor lighting' },
   { id: 'kitchens', label: 'Kitchens & rewires' },
-  { id: 'boards', label: 'Boards, CCTV & air con' },
+  { id: 'boards', label: 'Boards, CCTV & more' },
 ]
 
 export type GalleryItem = { id: string; photo: Photo; tag: string; filters: Exclude<GalleryFilter, 'all'>[] }
@@ -26,8 +26,8 @@ export const gallery: GalleryItem[] = [
   { id: 'strip-out-electrician', photo: work.stripOutElectrician, tag: 'Rewires', filters: ['kitchens'] },
   { id: 'media-wall-angle', photo: work.mediaWallAngle, tag: 'Indoor lighting', filters: ['indoor'] },
   { id: 'garage-wall-lights-close', photo: work.garageWallLightsClose, tag: 'Outdoor lighting', filters: ['outdoor'] },
-  { id: 'air-con', photo: work.airCon, tag: 'Air conditioning', filters: ['boards'] },
+  { id: 'air-con', photo: work.airCon, tag: 'AC supplies', filters: ['boards'] },
   { id: 'kitchen-window', photo: work.kitchenWindow, tag: 'Kitchens', filters: ['kitchens', 'indoor'] },
-  { id: 'garage-floodlight', photo: work.garageFloodlight, tag: 'Security lighting', filters: ['outdoor', 'boards'] },
+  { id: 'garage-floodlight', photo: work.garageFloodlight, tag: 'Security lighting', filters: ['outdoor'] },
   { id: 'strip-out', photo: work.stripOut, tag: 'Rewires', filters: ['kitchens'] },
 ]

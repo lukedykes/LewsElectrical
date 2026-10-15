@@ -29,7 +29,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageCms, ImageDraw, ImageFilter, ImageFont, ImageOps
 
 try:
     import cv2
@@ -45,6 +45,7 @@ MODEL_URL = 'https://raw.githubusercontent.com/Saafke/FSRCNN_Tensorflow/master/m
 
 LARGE_EDGE = 1600
 SMALL_WIDTH = 720
+THUMB_WIDTH = 160
 
 
 @dataclass
@@ -53,6 +54,8 @@ class Recipe:
     # Crop box as fractions of the original (left, top, right, bottom).
     crop: tuple[float, float, float, float] = (0, 0, 1, 1)
     rotate: float = 0.0  # degrees, anticlockwise
+    # Areas to blur out (house numbers and the like), as fractions of the original.
+    blur: tuple[tuple[float, float, float, float], ...] = ()
     denoise: int = 3  # strength of the JPEG/noise clean-up (0 = off)
     white_balance: float = 0.0  # 0..1, how far to pull mid-tones towards neutral grey
     temperature: float = 0.0  # + warmer, - cooler
@@ -81,8 +84,8 @@ RECIPES: dict[str, Recipe] = {
     'kitchen-strip-out': Recipe('kitchen-strip-out.jpg', denoise=3, white_balance=0.3, exposure=0.1, shadows=0.14, contrast=0.16, clarity=0.35, vibrance=0.1, split_tone=0.25, vignette=0.16),
     'kitchen-strip-out-electrician': Recipe('kitchen-strip-out-electrician.jpg', denoise=3, white_balance=0.3, exposure=0.1, shadows=0.14, contrast=0.16, clarity=0.35, vibrance=0.1, split_tone=0.25, vignette=0.16),
     'consumer-unit': Recipe('consumer-unit.jpg', crop=(0, 0.02, 1, 1), denoise=2, white_balance=0.45, exposure=0.12, shadows=0.16, highlights=-0.2, contrast=0.14, clarity=0.3, vibrance=0.16, split_tone=0.2, vignette=0.14),
-    'garage-wall-lights': Recipe('garage-wall-lights.jpg', denoise=5, white_balance=0.1, shadows=0.12, highlights=-0.1, contrast=0.14, clarity=0.25, vibrance=0.16, split_tone=0.35, vignette=0.18),
-    'garage-wall-lights-close': Recipe('garage-wall-lights-close.jpg', denoise=5, white_balance=0.1, shadows=0.12, highlights=-0.1, contrast=0.14, clarity=0.25, vibrance=0.16, split_tone=0.35, vignette=0.18),
+    'garage-wall-lights': Recipe('garage-wall-lights.jpg', blur=((0.077, 0.419, 0.111, 0.46),), denoise=5, white_balance=0.1, shadows=0.12, highlights=-0.1, contrast=0.14, clarity=0.25, vibrance=0.16, split_tone=0.35, vignette=0.18),
+    'garage-wall-lights-close': Recipe('garage-wall-lights-close.jpg', blur=((0.166, 0.724, 0.21, 0.776),), denoise=5, white_balance=0.1, shadows=0.12, highlights=-0.1, contrast=0.14, clarity=0.25, vibrance=0.16, split_tone=0.35, vignette=0.18),
     'garage-floodlight': Recipe('garage-floodlight.jpg', denoise=4, white_balance=0.2, exposure=0.05, shadows=0.12, highlights=-0.12, contrast=0.14, clarity=0.25, vibrance=0.16, split_tone=0.25, vignette=0.14),
     'soffit-downlights': Recipe('soffit-downlights.jpg', denoise=4, white_balance=0.2, exposure=0.06, shadows=0.12, highlights=-0.12, contrast=0.14, clarity=0.25, vibrance=0.16, split_tone=0.28, vignette=0.14),
     'extension-uplights': Recipe('extension-uplights.jpg', crop=(0.07, 0.03, 1, 0.86), denoise=6, white_balance=0.05, shadows=0.1, highlights=-0.08, contrast=0.14, clarity=0.22, vibrance=0.14, split_tone=0.38, vignette=0.2),
@@ -254,8 +257,32 @@ def save_webp(im: Image.Image, path: Path, sharpen: float, quality: int = 80) ->
 
 # --- pipeline ---------------------------------------------------------------
 
+def open_srgb(path: Path) -> Image.Image:
+    """Open a photo upright (EXIF orientation) and in sRGB (phones often embed Display P3)."""
+    im = ImageOps.exif_transpose(Image.open(path))
+    icc = im.info.get('icc_profile')
+    if icc:
+        src = ImageCms.ImageCmsProfile(io.BytesIO(icc))
+        im = ImageCms.profileToProfile(im, src, ImageCms.createProfile('sRGB'), outputMode='RGB')
+    return im.convert('RGB')
+
+
+def soft_blur(im: Image.Image, box: tuple[float, float, float, float]) -> Image.Image:
+    """Blur one area (fractions of the image) behind a feathered oval, so there's no hard-edged patch."""
+    w, h = im.size
+    l, t, r, b = box[0] * w, box[1] * h, box[2] * w, box[3] * h
+    pad_x, pad_y = (r - l) * 0.6, (b - t) * 0.6
+    blurred = im.filter(ImageFilter.GaussianBlur(radius=max(r - l, b - t) / 3))
+    mask = Image.new('L', im.size, 0)
+    ImageDraw.Draw(mask).ellipse((l - pad_x / 2, t - pad_y / 2, r + pad_x / 2, b + pad_y / 2), fill=255)
+    mask = mask.filter(ImageFilter.GaussianBlur(radius=max(pad_x, pad_y) / 2))
+    return Image.composite(blurred, im, mask)
+
+
 def grade(name: str, r: Recipe) -> tuple[Image.Image, Image.Image]:
-    original = Image.open(ORIGINALS / r.source).convert('RGB')
+    original = open_srgb(ORIGINALS / r.source)
+    for box in r.blur:
+        original = soft_blur(original, box)
     rgb = np.asarray(original, dtype=np.float32) / 255.0
     if r.rotate:
         im = Image.fromarray(to_u8(rgb)).rotate(r.rotate, Image.BICUBIC, expand=False)
@@ -284,7 +311,10 @@ def grade(name: str, r: Recipe) -> tuple[Image.Image, Image.Image]:
     OUT.mkdir(parents=True, exist_ok=True)
     save_webp(large, OUT / f'{name}.webp', r.sharpen, quality=80)
     save_webp(small, OUT / f'{name}-sm.webp', r.sharpen * 0.8, quality=78)
-    print(f'  {name}: {large.size[0]}x{large.size[1]} + {small.size[0]}x{small.size[1]}')
+    # Square-ish crop for the viewer's thumbnail strip.
+    thumb = ImageOps.fit(after, (THUMB_WIDTH, THUMB_WIDTH * 3 // 4), Image.LANCZOS)
+    save_webp(thumb, OUT / f'{name}-thumb.webp', 0.5, quality=74)
+    print(f'  {name}: {large.size[0]}x{large.size[1]} + {small.size[0]}x{small.size[1]} + thumb')
     return before, after
 
 
@@ -347,15 +377,19 @@ def social_image() -> None:
     img.alpha_composite(logo, (64, 70))
     draw = ImageDraw.Draw(img)
     fonts = ROOT / 'src' / 'assets' / 'fonts'
-    head = font(fonts / 'barlow-condensed-latin-800-italic.woff2', 76)
-    body = font(fonts / 'barlow-latin-600-normal.woff2', 30)
-    y = 70 + logo.height + 46
+    head = font(fonts / 'barlow-condensed-latin-900-normal.woff2', 84)
+    tracked = font(fonts / 'barlow-condensed-latin-700-normal.woff2', 26)
+    body = font(fonts / 'barlow-latin-600-normal.woff2', 28)
+    y = 70 + logo.height + 40
     draw.text((64, y), 'EXPERT ELECTRICAL', font=head, fill='white')
-    y += 78
-    tw = draw.textlength('SOLUTIONS', font=head)
-    draw.polygon([(60 + 10, y + 8), (60 + tw + 26, y + 8), (60 + tw + 14, y + 84), (60 - 2, y + 84)], fill=(200, 16, 46))
-    draw.text((68, y), 'SOLUTIONS', font=head, fill='white')
-    draw.text((64, H - 84), 'NICEIC Approved  ·  Essex & London  ·  07964 154458', font=body, fill=(233, 237, 245))
+    y += 80
+    draw.text((64, y), 'SOLUTIONS.', font=head, fill=(221, 26, 54))
+    y += 104
+    x = 66
+    for ch in 'SAFE · RELIABLE · PROFESSIONAL':
+        draw.text((x, y), ch, font=tracked, fill=(255, 138, 153))
+        x += draw.textlength(ch, font=tracked) + 7
+    draw.text((64, H - 70), 'NICEIC Approved  ·  Essex & London  ·  07964 154458', font=body, fill=(233, 237, 245))
     img.convert('RGB').save(ROOT / 'public' / 'og.jpg', 'JPEG', quality=86, optimize=True, progressive=True)
     print('  public/og.jpg written')
 

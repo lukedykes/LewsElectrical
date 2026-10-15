@@ -4,50 +4,46 @@ export type Tile = { width: number; height: number; fill: boolean }
 
 /**
  * Justified rows, as on Flickr or Google Photos: photos keep their shape, every
- * row is the same height across, and rows fill the width. Each row breaks where
- * its height lands closest to `target`. A short last row is folded into the one
- * above, so the grid always ends square.
+ * row is the same height across, and every row (the last one too) fills the width.
+ * Picks the row breaks that keep row heights closest to `target` overall, so no
+ * row ends up squashed or oversized.
  */
 export function justify(ratios: number[], width: number, target: number, gap: number): Tile[] {
-  const rows: number[][] = []
-  let row: number[] = []
-  let sum = 0
-  const heightOf = (total: number, count: number) => (width - gap * (count - 1)) / total
-
-  ratios.forEach((ratio, i) => {
-    if (row.length && (sum + ratio) * target + gap * row.length > width) {
-      const without = heightOf(sum, row.length)
-      const withIt = heightOf(sum + ratio, row.length + 1)
-      if (Math.abs(without - target) <= Math.abs(withIt - target)) {
-        rows.push(row)
-        row = [i]
-        sum = ratio
-      } else {
-        rows.push([...row, i])
-        row = []
-        sum = 0
-      }
-      return
-    }
-    row.push(i)
-    sum += ratio
-  })
-
-  if (row.length) {
-    const fill = (sum * target + gap * (row.length - 1)) / width
-    if (fill < 0.6 && rows.length) rows[rows.length - 1].push(...row)
-    else rows.push(row)
+  const n = ratios.length
+  if (!n || width <= 0 || target <= 0) return []
+  const prefix = [0]
+  for (const r of ratios) prefix.push(prefix[prefix.length - 1] + r)
+  const heightOf = (from: number, to: number) => (width - gap * (to - from - 1)) / (prefix[to] - prefix[from])
+  // Penalise how far a row's height strays from the target, proportionally.
+  const cost = (from: number, to: number) => {
+    const h = heightOf(from, to)
+    return h <= 0 ? Infinity : Math.log(h / target) ** 2
   }
 
-  const tiles: Tile[] = new Array(ratios.length)
-  for (const indexes of rows) {
-    const total = indexes.reduce((acc, i) => acc + ratios[i], 0)
-    const exact = heightOf(total, indexes.length)
-    const height = Math.min(exact, target * 1.6)
-    indexes.forEach((i, k) => {
+  // best[i]: lowest total cost to lay out the first i photos; from[i]: where its last row starts.
+  const best = new Array<number>(n + 1).fill(Infinity)
+  const from = new Array<number>(n + 1).fill(0)
+  best[0] = 0
+  for (let i = 1; i <= n; i++) {
+    for (let j = i - 1; j >= 0; j--) {
+      const total = best[j] + cost(j, i)
+      if (total < best[i]) {
+        best[i] = total
+        from[i] = j
+      }
+      // A row shorter than half the target won't get better with more photos in it.
+      if (heightOf(j, i) < target * 0.5) break
+    }
+  }
+
+  const tiles: Tile[] = new Array(n)
+  for (let end = n; end > 0; end = from[end]) {
+    const start = from[end]
+    const height = heightOf(start, end)
+    for (let i = start; i < end; i++) {
       // Widths are floored so a row never overflows; the last tile soaks up the spare pixel or two.
-      tiles[i] = { width: Math.floor(ratios[i] * height), height: Math.round(height), fill: k === indexes.length - 1 && height === exact }
-    })
+      tiles[i] = { width: Math.floor(ratios[i] * height), height: Math.round(height), fill: i === end - 1 }
+    }
   }
   return tiles
 }

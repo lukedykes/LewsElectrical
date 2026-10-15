@@ -8,6 +8,7 @@ export const business = {
   phone: '07964 154458',
   phoneHref: 'tel:+447964154458',
   smsHref: 'sms:+447964154458',
+  whatsappHref: 'https://wa.me/447964154458',
   email: 'lewselectricalltd@gmail.com',
   website: 'www.lewselectrical.co.uk',
   area: 'Across Essex & London',
@@ -31,46 +32,53 @@ export const navLinks = [
 
 export type ServiceIcon = 'home' | 'board' | 'test' | 'fault' | 'lighting' | 'cctv' | 'maintenance'
 
-export const services: { title: string; body: string; icon: ServiceIcon; enquiry: string }[] = [
+export const services: { title: string; body: string; points: string[]; icon: ServiceIcon; enquiry: string }[] = [
   {
     title: 'Full rewires',
     body: 'Complete and part rewires for houses and flats, planned room by room to keep disruption down.',
+    points: ['Complete & part rewires', 'Houses, flats & rentals', 'Planned room by room', 'Tested & certified'],
     icon: 'home',
     enquiry: 'Full rewire',
   },
   {
     title: 'New fuse boards',
     body: 'Consumer unit and distribution board upgrades, single and three phase, with up-to-date RCD protection.',
+    points: ['Single & three phase', 'RCBO & surge protection', 'Old fuse boxes replaced', 'Neat, labelled boards'],
     icon: 'board',
     enquiry: 'Fuse board upgrade',
   },
   {
     title: 'Testing & inspection (EICR)',
     body: 'Electrical Installation Condition Reports for homeowners, landlords and businesses.',
+    points: ['Homeowners & landlords', 'Shops, offices & sites', 'Clear written report', 'Any repairs quoted'],
     icon: 'test',
     enquiry: 'EICR / testing',
   },
   {
     title: 'Fault finding',
     body: 'Tripping switches, dead sockets or flickering lights. We track down the fault and put it right.',
+    points: ['Tripping switches', 'Dead sockets & lights', 'Flickering or buzzing', 'Put right properly'],
     icon: 'fault',
     enquiry: 'Fault finding',
   },
   {
     title: 'Lighting design & installation',
     body: 'Indoor, outdoor, feature and smart lighting for homes, shops and workplaces.',
+    points: ['Indoor & outdoor', 'Feature & LED strip', 'Smart lighting', 'Shops & workplaces'],
     icon: 'lighting',
     enquiry: 'Lighting',
   },
   {
     title: 'CCTV installation',
     body: 'Camera systems for homes and businesses that you can check from your phone.',
+    points: ['Homes & businesses', 'View from your phone', 'Day & night cameras', 'Neat cable runs'],
     icon: 'cctv',
     enquiry: 'CCTV',
   },
   {
     title: 'Maintenance & reactive call outs',
     body: 'Planned maintenance, and a quick response when something stops working.',
+    points: ['Planned maintenance', 'Reactive call outs', 'Homes & businesses', 'Rail industry'],
     icon: 'maintenance',
     enquiry: 'Maintenance / call out',
   },
@@ -88,7 +96,6 @@ export const rewire = {
     'Fault finding',
     'Maintenance & repairs',
     'Minimal disruption & tidy work',
-    'Free quotes & friendly advice',
   ],
   signs: [
     'An old fuse box with pull-out fuses',
@@ -111,10 +118,19 @@ export const commercial = {
     'Emergency lighting',
     'Testing & inspection (EICR)',
     'Minimal disruption to your business',
-    'Free quotes & friendly advice',
   ],
   venues: ['Retail', 'Salons', 'Hospitality', 'Offices', 'Gyms & studios'],
 }
+
+export const lighting = [
+  'Feature & shelf lighting',
+  'LED strip, cove & plinth lighting',
+  'Downlights & spotlights',
+  'Outdoor wall & soffit lights',
+  'Garden & decking lights',
+  'Security floodlights',
+  'Smart lighting control',
+]
 
 export const steps = [
   { title: 'Get in touch', body: 'Call, text or send us a message about what you need doing.' },

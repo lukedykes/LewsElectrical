@@ -1,7 +1,7 @@
 import { Briefcase, Dumbbell, Lightbulb, Scissors, ShoppingBag, TrendingUp, Users, UtensilsCrossed, type LucideIcon } from 'lucide-react'
 import { css, cx } from '../../styled-system/css'
 import { photos } from '../assets/images'
-import { Button, container, coverImage, Highlight, IconCircle, Img, Kicker, sectionY, TickList } from '../components/ui'
+import { Bullets, Button, container, coverImage, Highlight, IconTile, Img, Kicker, sectionY } from '../components/ui'
 import { commercial } from '../data/site'
 import { useContact } from '../lib/contact'
 
@@ -15,8 +15,8 @@ export function Commercial() {
     <section id="commercial" className={cx(sectionY, css({ bg: 'white' }))}>
       <div className={cx(container, css({ display: 'grid', gridTemplateColumns: { base: 'minmax(0, 1fr)', lg: 'minmax(0, 1.05fr) minmax(0, 0.95fr)' }, gap: { base: '10', lg: '16' }, alignItems: 'center' }))}>
         <div>
-          <Kicker>Shops, salons &amp; workplaces</Kicker>
-          <h2 className={css({ textStyle: 'h2', mt: '3' })}>
+          <Kicker>Commercial</Kicker>
+          <h2 className={css({ textStyle: 'h2', mt: '4' })}>
             Got a shop or salon
             <br />
             that needs <Highlight>modernising?</Highlight>
@@ -29,15 +29,15 @@ export function Commercial() {
           <ul className={css({ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '4', mt: '8' })}>
             {commercial.benefits.map((benefit, i) => (
               <li key={benefit} className={css({ display: 'flex', flexDir: 'column', alignItems: 'center', textAlign: 'center', gap: '2' })}>
-                <IconCircle icon={benefitIcons[i]} size="sm" />
-                <span className={css({ fontFamily: 'heading', fontWeight: '700', textTransform: 'uppercase', fontSize: '0.92rem', color: 'navy.900', lineHeight: '1.15' })}>
+                <IconTile icon={benefitIcons[i]} size="sm" />
+                <span className={css({ fontFamily: 'heading', fontWeight: '700', textTransform: 'uppercase', fontSize: '0.92rem', color: 'navy.900', lineHeight: '1.15', textWrap: 'balance' })}>
                   {benefit}
                 </span>
               </li>
             ))}
           </ul>
 
-          <TickList items={commercial.checklist} columns={2} className={css({ mt: '8' })} />
+          <Bullets items={commercial.checklist} columns={2} className={css({ mt: '8' })} />
 
           <Button size="lg" className={css({ mt: '8' })} onClick={() => openContact('Shop, salon or office work')}>
             Talk to us about your premises
@@ -45,7 +45,7 @@ export function Commercial() {
         </div>
 
         <figure className={css({ m: '0' })}>
-          <div className={css({ aspectRatio: '4 / 3', rounded: '8px', overflow: 'hidden', bg: 'navy.900' })}>
+          <div className={css({ aspectRatio: '4 / 3', rounded: '16px', overflow: 'hidden', bg: 'navy.900' })}>
             <Img photo={photos.venue} sizes="(min-width: 1024px) 45vw, 100vw" className={coverImage} />
           </div>
           <ul className={css({ display: 'grid', gridTemplateColumns: { base: 'repeat(3, minmax(0, 1fr))', sm: 'repeat(5, minmax(0, 1fr))' }, gap: '2', mt: '4' })}>
@@ -62,7 +62,7 @@ export function Commercial() {
                     textAlign: 'center',
                     py: '3',
                     px: '1',
-                    rounded: '6px',
+                    rounded: '4px',
                     bg: 'paper.100',
                     fontFamily: 'heading',
                     fontWeight: '700',

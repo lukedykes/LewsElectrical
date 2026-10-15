@@ -10,7 +10,7 @@ export function Areas() {
       <div className={cx(container, css({ display: 'grid', gridTemplateColumns: { base: 'minmax(0, 1fr)', lg: 'minmax(0, 1fr) minmax(0, 1fr)' }, gap: { base: '10', lg: '16' }, alignItems: 'center' }))}>
         <div>
           <Kicker>Where we work</Kicker>
-          <h2 className={css({ textStyle: 'h2', mt: '3' })}>
+          <h2 className={css({ textStyle: 'h2', mt: '4' })}>
             Across Essex <Highlight>&amp; London</Highlight>
           </h2>
           <p className={css({ textStyle: 'lead', color: 'ink.700', mt: '5' })}>
@@ -30,7 +30,7 @@ export function Areas() {
           </ButtonLink>
         </div>
         <figure className={css({ m: '0' })}>
-          <div className={css({ aspectRatio: '3 / 2', rounded: '8px', overflow: 'hidden', bg: 'navy.900' })}>
+          <div className={css({ aspectRatio: '3 / 2', rounded: '16px', overflow: 'hidden', bg: 'navy.900' })}>
             <Img photo={photos.areas} sizes="(min-width: 1024px) 50vw, 100vw" className={coverImage} />
           </div>
           <figcaption className={css({ fontSize: '0.8rem', color: 'muted', mt: '2' })}>{photos.areas.caption}</figcaption>

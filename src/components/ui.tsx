@@ -1,6 +1,7 @@
-import { Check, type LucideIcon } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'react'
 import { css, cva, cx, type RecipeVariantProps } from '../../styled-system/css'
+import type { SystemStyleObject } from '../../styled-system/types'
 import type { Photo } from '../assets/images'
 
 export const container = css({
@@ -14,38 +15,81 @@ export const sectionY = css({
   py: { base: '16', md: '24' },
 })
 
+/** Tracked red label with a short red rule in front: "— WHAT WE DO". */
 export function Kicker({ children, onNavy, className }: { children: ReactNode; onNavy?: boolean; className?: string }) {
   return (
-    <p className={cx(css({ textStyle: 'kicker' }), onNavy ? css({ color: 'navy.200' }) : css({ color: 'crimson.600' }), className)}>
+    <p className={cx(css({ textStyle: 'kicker', display: 'flex', alignItems: 'flex-start', gap: '3.5', textWrap: 'balance' }), onNavy ? css({ color: 'white' }) : css({ color: 'crimson.600' }), className)}>
+      {/* Lines up with the first line even if the label wraps. */}
+      <span aria-hidden className={css({ flexShrink: '0', w: '10', h: '2px', mt: '0.55em', bg: 'crimson.500' })} />
       {children}
     </p>
   )
 }
 
-/** White text on a slanted red block, like the banners on the client's flyers. */
+/** The key word of a heading, in red. */
 export function Highlight({ children }: { children: ReactNode }) {
+  return <span className={css({ color: 'crimson.500' })}>{children}</span>
+}
+
+/** Section opener: tracked label, big heading, intro line, then a thick rule across. */
+export function SectionIntro({ kicker, title, lead, id, onNavy, intro, children }: {
+  kicker: ReactNode
+  title: ReactNode
+  lead?: ReactNode
+  id?: string
+  onNavy?: boolean
+  /** Overrides for the wrapper, made with css.raw() so they merge cleanly. */
+  intro?: SystemStyleObject
+  children?: ReactNode
+}) {
   return (
-    <span
-      className={css({
-        position: 'relative',
-        display: 'inline-block',
-        color: 'white',
-        px: '0.14em',
-        isolation: 'isolate',
-        _before: {
-          content: '""',
-          position: 'absolute',
-          inset: '0.07em -0.03em 0.03em',
-          bg: 'crimson.600',
-          transform: 'skewX(-11deg)',
-          zIndex: '-1',
-        },
-      })}
+    <div
+      className={cx(
+        css({ pb: { base: '8', md: '10' }, mb: { base: '10', md: '12' }, borderBottom: '3px solid' }, intro),
+        onNavy ? css({ borderColor: 'rgba(255, 255, 255, 0.85)' }) : css({ borderColor: 'navy.950' }),
+      )}
     >
+      <Kicker onNavy={onNavy}>{kicker}</Kicker>
+      <h2 id={id} className={css({ textStyle: 'h2', mt: '4' })}>
+        {title}
+      </h2>
+      {lead && <p className={cx(css({ textStyle: 'lead', mt: '5', maxW: '46rem' }), onNavy ? css({ color: 'navy.100' }) : css({ color: 'ink.500' }))}>{lead}</p>}
       {children}
-    </span>
+    </div>
   )
 }
+
+/** Small red squares, as on the reference site's service cards. */
+export function Bullets({ items, onNavy, columns = 1, className }: { items: string[]; onNavy?: boolean; columns?: 1 | 2; className?: string }) {
+  return (
+    <ul
+      className={cx(
+        css({ display: 'grid', gap: '2.5', columnGap: '8', alignContent: 'start' }),
+        columns === 2 && css({ gridTemplateColumns: { base: 'minmax(0, 1fr)', sm: 'repeat(2, minmax(0, 1fr))' } }),
+        className,
+      )}
+    >
+      {items.map((item) => (
+        <li key={item} className={cx(css({ display: 'flex', alignItems: 'baseline', gap: '3.5', lineHeight: '1.4' }), onNavy ? css({ color: 'navy.100' }) : css({ color: 'ink.700' }))}>
+          <span aria-hidden className={css({ flexShrink: '0', w: '1.5', h: '1.5', bg: 'crimson.500', transform: 'translateY(-0.2em)' })} />
+          {item}
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+/** Tracked red text link with an arrow: "VIEW OUR WORK →". */
+export const trackedLink = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '2',
+  textStyle: 'tracked',
+  color: 'crimson.600',
+  cursor: 'pointer',
+  transition: 'gap 0.2s',
+  _hover: { gap: '3' },
+})
 
 export const button = cva({
   base: {
@@ -55,7 +99,7 @@ export const button = cva({
     gap: '2',
     fontWeight: '700',
     letterSpacing: '0.01em',
-    rounded: '6px',
+    rounded: '4px',
     border: '2px solid transparent',
     cursor: 'pointer',
     textAlign: 'center',
@@ -90,38 +134,19 @@ export function Button({ variant, size, className, type = 'button', ...rest }: B
   return <button type={type} className={cx(button({ variant, size }), className)} {...rest} />
 }
 
-/** Red ticked checklist, as used on the flyers. */
-export function TickList({ items, columns = 1, onNavy, className }: { items: string[]; columns?: 1 | 2; onNavy?: boolean; className?: string }) {
+/** Outline icon on a soft red tile. */
+export function IconTile({ icon: Icon, size = 'md', className }: { icon: LucideIcon; size?: 'sm' | 'md' | 'lg'; className?: string }) {
+  const dims = { sm: css({ w: '11', h: '11', rounded: '10px' }), md: css({ w: '14', h: '14', rounded: '14px' }), lg: css({ w: '16', h: '16', rounded: '16px' }) }[size]
   return (
-    <ul
-      className={cx(
-        css({ display: 'grid', gap: '2.5', columnGap: '8' }),
-        columns === 2 && css({ gridTemplateColumns: { base: 'minmax(0, 1fr)', sm: 'repeat(2, minmax(0, 1fr))' } }),
-        className,
-      )}
-    >
-      {items.map((item) => (
-        <li key={item} className={cx(css({ display: 'flex', alignItems: 'flex-start', gap: '3', lineHeight: '1.4' }), onNavy ? css({ color: 'navy.100' }) : css({ color: 'ink.700' }))}>
-          <span
-            aria-hidden
-            className={css({ flexShrink: '0', display: 'grid', placeItems: 'center', w: '5', h: '5', mt: '0.5', rounded: '4px', bg: 'crimson.600', color: 'white' })}
-          >
-            <Check size={14} strokeWidth={3.2} />
-          </span>
-          {item}
-        </li>
-      ))}
-    </ul>
+    <span aria-hidden className={cx(css({ display: 'grid', placeItems: 'center', flexShrink: '0', bg: 'crimson.100', color: 'navy.950' }), dims, className)}>
+      <Icon size={size === 'sm' ? 20 : size === 'md' ? 26 : 30} strokeWidth={1.7} />
+    </span>
   )
 }
 
-export function IconCircle({ icon: Icon, size = 'md', className }: { icon: LucideIcon; size?: 'sm' | 'md' | 'lg'; className?: string }) {
-  const dims = { sm: css({ w: '10', h: '10' }), md: css({ w: '14', h: '14' }), lg: css({ w: '16', h: '16' }) }[size]
-  return (
-    <span aria-hidden className={cx(css({ display: 'grid', placeItems: 'center', flexShrink: '0', rounded: 'full', bg: 'crimson.600', color: 'white' }), dims, className)}>
-      <Icon size={size === 'sm' ? 18 : size === 'md' ? 26 : 30} strokeWidth={1.8} />
-    </span>
-  )
+/** srcset for a photo's two sizes, or nothing when both are the same file (the single-file demo build). */
+export function srcSetFor(photo: Photo) {
+  return photo.small === photo.src ? undefined : `${photo.small} ${photo.smallWidth}w, ${photo.src} ${photo.width}w`
 }
 
 export function Img({ photo, sizes = '100vw', className, priority, alt }: {
@@ -131,7 +156,7 @@ export function Img({ photo, sizes = '100vw', className, priority, alt }: {
   priority?: boolean
   alt?: string
 }) {
-  const srcSet = photo.small === photo.src ? undefined : `${photo.small} ${photo.smallWidth}w, ${photo.src} ${photo.width}w`
+  const srcSet = srcSetFor(photo)
   return (
     <img
       src={photo.small}

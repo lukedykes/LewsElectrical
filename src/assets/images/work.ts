@@ -1,6 +1,7 @@
 // Lews Electrical's own job photos. The untouched originals live in
 // photos/originals/; scripts/photos/grade.py crops, cleans up, upscales and
-// colour-grades them into ./work/ and writes the pixel sizes to manifest.json.
+// colour-grades them into ./work/ (large, small and thumbnail) and writes the
+// pixel sizes to manifest.json.
 import manifest from './work/manifest.json'
 import type { Photo } from './index'
 
@@ -12,8 +13,9 @@ function job(name: WorkName, alt: string, caption: string, position?: string): P
   const size = manifest[name]
   const src = urls[`./work/${name}.webp`]
   const small = urls[`./work/${name}-sm.webp`]
-  if (!src || !small) throw new Error(`Missing graded photo: ${name}`)
-  return { src, small, width: size.width, height: size.height, smallWidth: size.smallWidth, alt, caption, position }
+  const thumb = urls[`./work/${name}-thumb.webp`]
+  if (!src || !small || !thumb) throw new Error(`Missing graded photo: ${name}`)
+  return { src, small, thumb, width: size.width, height: size.height, smallWidth: size.smallWidth, alt, caption, position }
 }
 
 export const work = {
@@ -21,7 +23,7 @@ export const work = {
     'hero',
     'A media wall with a wide electric fire, a recessed TV and soundbar, and warm LED lighting in the shelves and along the ceiling',
     'Media wall lighting',
-    '50% 55%',
+    '50% 30%',
   ),
   mediaWall: job(
     'media-wall',
@@ -45,7 +47,7 @@ export const work = {
   ),
   kitchenWindow: job(
     'kitchen-window',
-    'A long galley-style kitchen with a glowing LED plinth strip running along the base units to the window',
+    'The grey kitchen from the doorway, with a glowing LED plinth strip under the tall units and the run beneath the hob',
     'LED plinth lighting',
   ),
   stripOut: job(
@@ -55,8 +57,8 @@ export const work = {
   ),
   stripOutElectrician: job(
     'kitchen-strip-out-electrician',
-    'An electrician at work on a stripped-out wall, with new cables hanging ready from the ceiling joists',
-    'First fix on a kitchen job',
+    'A wall being stripped back in a gutted room, with new cables hanging ready from the ceiling joists',
+    'Strip-out under way, new cables in',
     '62% 40%',
   ),
   consumerUnit: job(
@@ -102,6 +104,6 @@ export const work = {
   airCon: job(
     'air-conditioning',
     'Three air conditioning outdoor units on a brick gable wall, each with its own outdoor isolator and neat white trunking',
-    'Air conditioning units with isolators',
+    'Supplies and isolators for three AC units',
   ),
 } satisfies Record<string, Photo>

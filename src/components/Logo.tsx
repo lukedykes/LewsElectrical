@@ -11,8 +11,10 @@ import onLight640 from '../assets/brand/logo-on-light-640.webp'
 const WIDTH = 640
 const HEIGHT = 252
 
-export function Logo({ onNavy, tagline, className, imgCss, sizes = '150px' }: {
+export function Logo({ onNavy, tagline, className, imgCss, sizes = '150px', lazy }: {
   onNavy?: boolean
+  /** For copies below the fold (the footer). */
+  lazy?: boolean
   tagline?: boolean
   className?: string
   /** Overrides for the image, made with css.raw() so they merge cleanly. */
@@ -29,6 +31,7 @@ export function Logo({ onNavy, tagline, className, imgCss, sizes = '150px' }: {
         width={WIDTH}
         height={HEIGHT}
         alt="Lews Electrical Ltd"
+        loading={lazy ? 'lazy' : undefined}
         decoding="async"
         className={css({ display: 'block', h: { base: '11', md: '14' }, w: 'auto' }, imgCss)}
       />

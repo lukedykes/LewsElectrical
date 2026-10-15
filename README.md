@@ -11,39 +11,43 @@ until the client signs off.
 
 ## Design approach
 
-The site is built from the client's own printed flyers rather than a generic template, so it looks like their business:
+The site is built from the client's own printed flyers and photos, laid out in the style of a reference site the
+client liked:
 
-- **Their colours and type.** Deep navy, signal red and white, with heavy italic condensed capitals for headlines
-  (Barlow Condensed) and the slanted red banner behind key words, as on the flyers. Body text is Barlow.
+- **Their colours, the reference's layout.** Deep navy, signal red and white from the flyers. From the reference:
+  heavy upright condensed capitals (Barlow Condensed 800/900) with the key word in red, tracked red labels with a
+  short rule, thick dividers under each section intro, soft icon tiles, red square bullets, a scrolling services band,
+  contact rows, and an always-visible Call / WhatsApp / Free quote bar on phones. Body text is Barlow.
 - **Their words.** Headlines, checklists and offers come from the flyers: "Expert electrical solutions", "Do you need
   your home rewired?", "Got a shop or salon that needs modernising?", "Refer a friend and be rewarded!", the red tick
   lists and the round "A safer, brighter home starts here" badge.
 - **Their logo and their own work.** The real cable-lettering logo, and Lews Electrical's own job photos throughout:
   the media wall in the hero, first fix and finished kitchen in the rewires section, a new consumer unit, and a
-  filterable gallery of 16 jobs. Every photo is cleaned up, upscaled and colour-graded the same way (see below).
-- **Local scenery where there's no job photo yet.** Commercial, rail and the areas map still use photos of Southend,
-  Islington, Chappel Viaduct and Leigh-on-Sea from Wikimedia Commons (plus one example of an old fuse board), credited
-  in the footer. No trains or stations, at the
-  client's request.
-- **Plain and practical.** Gentle motion only (and none if the visitor has reduced motion turned on). Phone number on
-  every screen, a sticky call bar on phones, a simple contact form, and photos sized for each screen.
+  filterable gallery of 16 job photos. Every photo is cleaned up, upscaled where needed and colour-graded the same
+  way (see below), and house numbers are blurred.
+- **Local scenery where there's no job photo yet.** The commercial panel and section and the areas map still use photos
+  of Southend, Islington and Leigh-on-Sea from Wikimedia Commons (plus one example of an old fuse board), credited in
+  the footer. Rail has an icon tile instead of a picture: no trains or stations, at the client's request.
+- **Plain and practical.** Gentle motion only (the scrolling band can be paused, and nothing moves if the visitor has
+  reduced motion turned on). Phone number on every screen, a simple contact form, and photos sized for each screen.
 
 ## Sections
 
 1. Header with accreditations, phone, email and a sticky menu
-2. Hero: "Expert electrical solutions" for homes, businesses and the rail industry
-3. Domestic, commercial and rail panels
-4. Services (the seven services from the flyer)
-5. Our work: a gallery of real jobs in justified rows, with filters and a full-screen viewer (keyboard, swipe,
-   thumbnails)
-6. Home rewires, with a before-and-after pair, warning signs and fuse board photos
-7. Shops, salons and workplaces
-8. Rail infrastructure
-9. How it works and why choose Lews
-10. Refer a friend (£50 / £150)
-11. Areas covered
-12. FAQs
-13. Contact form and details
+2. Hero: "Expert electrical solutions." with the media wall photo
+3. Scrolling band of services (pausable)
+4. Who we work for: domestic, commercial and rail
+5. Services (the seven services from the flyer, each with key points)
+6. Photo library: real jobs in justified rows, with filters and a full-screen viewer (keyboard, swipe, thumbnails)
+7. Home rewires, with work-in-progress and finished photos, warning signs and fuse board photos
+8. Lighting design and installation
+9. Shops, salons and workplaces
+10. Rail infrastructure
+11. How it works and why choose Lews
+12. Refer a friend (£50 / £150)
+13. Areas covered
+14. FAQs
+15. Contact: call, WhatsApp, email and the quote form
 
 ## Stack
 
@@ -123,9 +127,11 @@ To add a photo: drop it in `photos/originals/`, add a recipe in `grade.py`, run 
 
 ## Before going live
 
-- Swap the remaining Wikimedia photos (commercial panel and bar, rail, areas, and the "older fuse board" example) for
-  job photos when there are some, and confirm the kitchen first fix and finished photos are the same job (they're
-  shown as a before and after).
+- Confirm 07964 154458 is on WhatsApp. The contact section, footer and phone bar link to it (`whatsappHref` in
+  `src/data/site.ts`).
+- Swap the remaining Wikimedia photos (commercial panel and bar, areas, and the "older fuse board" example) for job
+  photos when there are some, add a rail job photo if there is one, and confirm the kitchen first fix and finished photos are the same job (they're
+  shown side by side in the rewires section).
 - Add genuine Google or Checkatrade reviews (none are shown, so nothing is invented).
 - Connect `/api/enquiry` to email or a CRM, or point the form at a form service.
 - Remove the concept strip, the `noindex` meta tag and the `robots.txt` rule, then point www.lewselectrical.co.uk at

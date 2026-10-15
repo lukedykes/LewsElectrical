@@ -1,8 +1,8 @@
-import { Expand, Phone } from 'lucide-react'
+import { Expand, FileText, Phone } from 'lucide-react'
 import { useRef, useState, type CSSProperties } from 'react'
 import { css, cx } from '../../styled-system/css'
 import { Lightbox } from '../components/Lightbox'
-import { Button, ButtonLink, container, Highlight, Kicker, sectionY } from '../components/ui'
+import { Button, ButtonLink, container, Highlight, SectionIntro, sectionY, srcSetFor } from '../components/ui'
 import { gallery, galleryFilters, type GalleryFilter } from '../data/gallery'
 import { business } from '../data/site'
 import { useContact } from '../lib/contact'
@@ -24,35 +24,19 @@ export function Gallery() {
   const tiles = box && box.width > 0 ? justify(ratios, box.width, rowHeight(box.width), box.gap) : null
 
   return (
-    <section id="work" aria-labelledby="work-title" className={cx(sectionY, css({ position: 'relative', bg: 'navy.950', color: 'white', overflow: 'hidden' }))}>
-      {/* Soft glow behind the photos. */}
-      <span
-        aria-hidden
-        className={css({
-          position: 'absolute',
-          inset: '0',
-          bg: 'radial-gradient(60rem 30rem at 85% 0%, rgba(200, 16, 46, 0.18), transparent 70%), radial-gradient(50rem 30rem at 0% 100%, rgba(37, 99, 235, 0.12), transparent 70%)',
-          pointerEvents: 'none',
-        })}
-      />
-      <div className={cx(container, css({ position: 'relative' }))}>
-        <div className={css({ display: 'flex', flexDir: { base: 'column', lg: 'row' }, alignItems: { lg: 'flex-end' }, justifyContent: 'space-between', gap: { base: '6', lg: '12' } })}>
-          <div className={css({ maxW: '42rem' })}>
-            <Kicker onNavy>Our work</Kicker>
-            <h2 id="work-title" className={css({ textStyle: 'h2', mt: '3' })}>
-              Recent <Highlight>projects</Highlight>
-            </h2>
-            <p className={css({ textStyle: 'lead', color: 'navy.100', mt: '5' })}>
-              Real jobs by the Lews Electrical team: feature lighting, kitchens, rewires, fuse boards and more, across Essex and
-              London.
-            </p>
-          </div>
-
-          <p className={css({ display: { base: 'none', lg: 'block' }, flexShrink: '0', fontFamily: 'heading', fontWeight: '800', fontStyle: 'italic', fontSize: '5rem', lineHeight: '0.8', color: 'transparent', WebkitTextStroke: '1.5px rgba(255, 255, 255, 0.28)', fontVariantNumeric: 'tabular-nums' })} aria-hidden>
-            {String(gallery.length).padStart(2, '0')}
-            <span className={css({ display: 'block', fontSize: '1rem', fontStyle: 'normal', fontWeight: '700', letterSpacing: '0.14em', color: 'navy.200', WebkitTextStroke: '0', textTransform: 'uppercase', mt: '3', textAlign: 'right' })}>Real job photos</span>
-          </p>
-        </div>
+    <section id="work" aria-labelledby="work-title" className={cx(sectionY, css({ bg: 'white' }))}>
+      <div className={container}>
+        <SectionIntro
+          id="work-title"
+          kicker="Photo library"
+          title={
+            <>
+              Real jobs, <Highlight>real photos.</Highlight>
+            </>
+          }
+          lead="Every job photo on the site, grouped by the kind of work. Tap any photo to see it full size."
+          intro={css.raw({ mb: { base: '8', md: '10' } })}
+        />
 
         {/* One swipeable row on phones, wrapping from tablet up. */}
         <div
@@ -62,11 +46,11 @@ export function Gallery() {
             display: 'flex',
             flexWrap: { base: 'nowrap', md: 'wrap' },
             gap: '2',
-            mt: { base: '7', md: '9' },
             mx: { base: '-5', md: '0' },
             px: { base: '5', md: '0' },
             py: '1',
             overflowX: { base: 'auto', md: 'visible' },
+            scrollPaddingInline: '1.5rem 3rem',
             scrollbarWidth: 'none',
             '&::-webkit-scrollbar': { display: 'none' },
             maskImage: { base: 'linear-gradient(to right, transparent 0, black 1.25rem, black calc(100% - 2.5rem), transparent 100%)', md: 'none' },
@@ -81,6 +65,8 @@ export function Gallery() {
                 type="button"
                 aria-pressed={active}
                 onClick={() => setFilter(f.id)}
+                // On phones the row scrolls sideways: bring a chip fully into view when it gets keyboard focus.
+                onFocus={(e) => e.currentTarget.scrollIntoView({ block: 'nearest', inline: 'nearest' })}
                 className={css({
                   display: 'inline-flex',
                   flexShrink: '0',
@@ -90,25 +76,25 @@ export function Gallery() {
                   whiteSpace: 'nowrap',
                   px: '4',
                   rounded: 'full',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  bg: 'rgba(255, 255, 255, 0.04)',
-                  color: 'navy.100',
+                  border: '1px solid {colors.paper.300}',
+                  bg: 'white',
+                  color: 'navy.950',
                   fontFamily: 'heading',
                   fontWeight: '700',
-                  fontSize: '1rem',
+                  fontSize: '0.95rem',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.04em',
+                  letterSpacing: '0.12em',
                   cursor: 'pointer',
                   transition: 'background 0.2s, color 0.2s, border-color 0.2s',
-                  _hover: { borderColor: 'rgba(255, 255, 255, 0.5)', color: 'white' },
-                  '&[aria-pressed="true"]': { bg: 'crimson.600', borderColor: 'crimson.600', color: 'white' },
+                  _hover: { borderColor: 'navy.950' },
+                  '&[aria-pressed="true"]': { bg: 'navy.950', borderColor: 'navy.950', color: 'white' },
                 })}
               >
                 {f.label}
                 <span
                   className={cx(
                     css({ fontFamily: 'body', fontSize: '0.75rem', fontWeight: '700', lineHeight: '1', px: '1.5', py: '1', rounded: 'full', fontVariantNumeric: 'tabular-nums' }),
-                    active ? css({ bg: 'rgba(255, 255, 255, 0.22)' }) : css({ bg: 'rgba(255, 255, 255, 0.1)' }),
+                    active ? css({ bg: 'crimson.500', color: 'white' }) : css({ bg: 'paper.200', color: 'ink.700' }),
                   )}
                 >
                   {total}
@@ -160,39 +146,35 @@ export function Gallery() {
                   <button
                     type="button"
                     onClick={() => setViewing(i)}
-                    aria-label={`View larger: ${item.photo.caption}`}
                     className={css({
                       position: 'relative',
                       display: 'block',
                       w: '100%',
                       h: '100%',
                       p: '0',
-                      rounded: { base: '6px', md: '10px' },
+                      rounded: { base: '8px', md: '14px' },
                       overflow: 'hidden',
-                      bg: 'navy.800',
+                      bg: 'paper.200',
                       cursor: 'zoom-in',
                       isolation: 'isolate',
-                      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.25)',
-                      '& img': { transition: 'transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.7s' },
+                      boxShadow: '0 14px 30px -18px rgba(10, 30, 69, 0.45)',
                       '& [data-overlay]': { opacity: 0, transition: 'opacity 0.35s' },
-                      '& [data-caption]': { transform: 'translateY(10px)', transition: 'transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1)' },
-                      _canHover: {
-                        _hover: {
-                          '& img': { transform: 'scale(1.06)' },
-                          '& [data-overlay]': { opacity: 1 },
-                          '& [data-caption]': { transform: 'none' },
-                        },
-                      },
-                      _focusVisible: {
-                        '& [data-overlay]': { opacity: 1 },
-                        '& [data-caption]': { transform: 'none' },
+                      _canHover: { _hover: { '& [data-overlay]': { opacity: 1 } } },
+                      _focusVisible: { '& [data-overlay]': { opacity: 1 } },
+                      // The zoom and caption slide only when motion is welcome; the fade stays either way.
+                      _motionSafe: {
+                        '& img': { transition: 'transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1)' },
+                        '& [data-caption]': { transform: 'translateY(10px)', transition: 'transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1)' },
+                        _canHover: { _hover: { '& img': { transform: 'scale(1.06)' }, '& [data-caption]': { transform: 'none' } } },
+                        _focusVisible: { '& [data-caption]': { transform: 'none' } },
                       },
                     })}
                   >
                     <img
                       src={item.photo.small}
-                      srcSet={`${item.photo.small} ${item.photo.smallWidth}w, ${item.photo.src} ${item.photo.width}w`}
-                      sizes="(min-width: 1024px) 420px, (min-width: 640px) 45vw, 60vw"
+                      srcSet={srcSetFor(item.photo)}
+                      // The layout knows each tile's width, so ask for exactly that (before it's measured, estimate from the row height).
+                      sizes={srcSetFor(item.photo) && `${tile ? tile.width : Math.round(ratios[i] * 270)}px`}
                       width={item.photo.width}
                       height={item.photo.height}
                       alt={item.photo.alt}
@@ -201,6 +183,7 @@ export function Gallery() {
                       style={{ aspectRatio: `${item.photo.width} / ${item.photo.height}`, objectPosition: item.photo.position }}
                       className={css({ display: 'block', w: '100%', h: '100%', objectFit: 'cover' })}
                     />
+                    <span className={css({ srOnly: true })}>(view larger)</span>
                     <span
                       data-overlay
                       aria-hidden
@@ -213,14 +196,14 @@ export function Gallery() {
                         alignItems: 'flex-start',
                         textAlign: 'left',
                         p: { sm: '3', md: '4' },
-                        bg: 'linear-gradient(to top, rgba(6, 20, 48, 0.92) 0%, rgba(6, 20, 48, 0.35) 45%, transparent 70%)',
+                        bg: 'linear-gradient(to top, rgba(6, 20, 48, 0.95) 0%, rgba(6, 20, 48, 0.7) 32%, rgba(6, 20, 48, 0.2) 60%, transparent 75%)',
                       })}
                     >
                       <span className={css({ position: 'absolute', top: '3', right: '3', display: 'grid', placeItems: 'center', w: '9', h: '9', rounded: 'full', bg: 'crimson.600', color: 'white' })}>
                         <Expand size={16} />
                       </span>
                       <span data-caption>
-                        <span className={css({ display: 'block', fontFamily: 'heading', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.75rem', color: 'crimson.500' })}>
+                        <span className={css({ display: 'block', fontFamily: 'heading', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.75rem', color: 'crimson.300' })}>
                           {item.tag}
                         </span>
                         <span className={css({ display: 'block', fontWeight: '600', lineHeight: '1.25', mt: '0.5', color: 'white' })}>{item.photo.caption}</span>
@@ -242,20 +225,20 @@ export function Gallery() {
             gap: '5',
             mt: { base: '10', md: '14' },
             pt: { base: '8', md: '10' },
-            borderTop: '1px solid {colors.lineOnNavy}',
+            borderTop: '1px solid {colors.paper.300}',
           })}
         >
-          <p className={css({ fontFamily: 'heading', fontWeight: '800', fontStyle: 'italic', textTransform: 'uppercase', fontSize: { base: '1.7rem', md: '2.1rem' }, lineHeight: '1' })}>
-            Like what you see?
-            <span className={css({ display: 'block', color: 'navy.200', fontStyle: 'normal', fontWeight: '600', fontFamily: 'body', textTransform: 'none', fontSize: '1rem', lineHeight: '1.5', mt: '2' })}>
+          <p className={css({ textStyle: 'h3', fontSize: { base: '2rem', md: '2.4rem' }, color: 'navy.950' })}>
+            Like what <Highlight>you see?</Highlight>
+            <span className={css({ display: 'block', color: 'ink.500', fontWeight: '400', fontFamily: 'body', textTransform: 'none', fontSize: '1.05rem', lineHeight: '1.5', mt: '2' })}>
               Tell us about your project and we’ll send you a free, no-obligation quote.
             </span>
           </p>
-          <div className={css({ display: 'flex', flexWrap: 'wrap', gap: '3' })}>
+          <div className={css({ display: 'flex', flexWrap: 'wrap', gap: '3', '& > *': { flex: { base: '1 1 100%', sm: '0 0 auto' } } })}>
             <Button size="lg" onClick={() => openContact()}>
-              Get a free quote
+              <FileText size={18} aria-hidden /> Get a free quote
             </Button>
-            <ButtonLink href={business.phoneHref} variant="outlineLight" size="lg">
+            <ButtonLink href={business.phoneHref} variant="outline" size="lg">
               <Phone size={18} aria-hidden /> {business.phone}
             </ButtonLink>
           </div>
